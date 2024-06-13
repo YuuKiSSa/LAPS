@@ -17,6 +17,7 @@ public class Staff {
     private String email;
     private boolean status;
     private int hierarchy;
+    @Column(length = 30)
     private String department;
     @OneToMany(mappedBy = "staff", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<Application> applications;
