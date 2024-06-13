@@ -17,7 +17,7 @@ public class Staff {
     private String email;
     private boolean status;
     private int hierarchy;
-    private int department;
+    private String department;
     @OneToMany(mappedBy = "staff", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<Application> applications;
 
@@ -71,11 +71,11 @@ public class Staff {
         this.status = status;
     }
 
-    public int getDepartment() {
+    public String getDepartment() {
         return department;
     }
 
-    public void setDepartment(int department) {
+    public void setDepartment(String department) {
         this.department = department;
     }
 
