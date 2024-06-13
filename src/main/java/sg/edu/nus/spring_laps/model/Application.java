@@ -68,4 +68,16 @@ public class Application {
     public void setStaff(Staff staff) {
         this.staff = staff;
     }
+
+    @Override
+    public String toString() {
+        return "Application{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", status='" + status + '\'' +
+                ", staff=" + staff +
+                '}';
+    }
 }

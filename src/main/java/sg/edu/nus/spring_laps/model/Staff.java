@@ -17,6 +17,7 @@ public class Staff {
     private String email;
     private boolean status;
     private int hierarchy;
+    private String department;
     @OneToMany(mappedBy = "staff", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<Application> applications;
 
@@ -70,11 +71,33 @@ public class Staff {
         this.status = status;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     public List<Application> getApplications() {
         return this.applications;
     }
 
     public void setApplications(List<Application> applications) {
         this.applications = applications;
+    }
+
+    @Override
+    public String toString() {
+        return "Staff{" +
+                "userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", status=" + status +
+                ", hierarchy=" + hierarchy +
+                ", department='" + department + '\'' +
+                ", applications=" + applications +
+                '}';
     }
 }

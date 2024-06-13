@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+<a href="/logout">Logout</a>
+<header>
+    <main>
+        <h1>Welcome, <span th:text="${staff.name}"></span>!</h1>
+        <p>Your hierarchy: <span th:text="${staff.hierarchy}"></span></p>
+        <p>Email: <span th:text="${staff.email}"></span></p>
+    </main>
+    <nav>
+        <ul>
+            <li><a href="#">Apply a Leave</a></li>
+            <li><a href="#">View Leave History</a></li>
+        </ul>
+    </nav>
+</header>
+
+</body>
+</html>
