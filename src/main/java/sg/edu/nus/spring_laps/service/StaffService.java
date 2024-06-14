@@ -1,7 +1,7 @@
-package sg.edu.nus.spring_laps.interfacemethods;
+package sg.edu.nus.spring_laps.service;
 
 import sg.edu.nus.spring_laps.model.Staff;
 
-public interface StaffInterface {
+public interface StaffService {
     Staff findStaffById(String userId);
 }

@@ -3,12 +3,11 @@ package sg.edu.nus.spring_laps.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sg.edu.nus.spring_laps.interfacemethods.StaffInterface;
 import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.repository.StaffRepository;
 
 @Service
-public class StaffImplementation implements StaffInterface {
+public class StaffServiceImpl implements StaffService {
     @Autowired
     private StaffRepository staffRepo;
 
