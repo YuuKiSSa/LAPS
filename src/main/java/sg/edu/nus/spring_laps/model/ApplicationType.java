@@ -2,6 +2,8 @@ package sg.edu.nus.spring_laps.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class ApplicationType {
     @Id
@@ -9,6 +11,8 @@ public class ApplicationType {
     private int id;
     @Column(length = 20)
     private String type;
+    @OneToMany(mappedBy = "applicationType")
+    private List<Application> applications;
 
     public ApplicationType() {}
 
