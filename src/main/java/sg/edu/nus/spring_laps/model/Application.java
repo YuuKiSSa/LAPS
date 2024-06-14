@@ -9,8 +9,6 @@ public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 20)
-    private String type;
     private Date startTime;
     private Date endTime;
     @Column(length = 10)
@@ -18,6 +16,9 @@ public class Application {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "user_id"))
     private Staff staff;
+    @ManyToOne
+    @JoinColumn(name = "type_id", nullable = false, foreignKey = @ForeignKey(name = "type_id"))
+    private ApplicationType applicationType;
 
     public Application() {}
 
@@ -27,14 +28,6 @@ public class Application {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public Date getStartTime() {
@@ -69,15 +62,23 @@ public class Application {
         this.staff = staff;
     }
 
+    public ApplicationType getApplicationType() {
+        return applicationType;
+    }
+
+    public void setApplicationType(ApplicationType applicationType) {
+        this.applicationType = applicationType;
+    }
+
     @Override
     public String toString() {
         return "Application{" +
                 "id=" + id +
-                ", type='" + type + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", status='" + status + '\'' +
                 ", staff=" + staff +
+                ", applicationType=" + applicationType +
                 '}';
     }
 }

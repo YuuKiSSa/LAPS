@@ -17,7 +17,9 @@ public class Staff {
     private String email;
     private boolean status;
     private int hierarchy;
-    private String department;
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false, foreignKey = @ForeignKey(name = "department_id"))
+    private Department department;
     @OneToMany(mappedBy = "staff", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     private List<Application> applications;
 
@@ -71,11 +73,11 @@ public class Staff {
         this.status = status;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 
-    public void setDepartment(String department) {
+    public void setDepartment(Department department) {
         this.department = department;
     }
 
