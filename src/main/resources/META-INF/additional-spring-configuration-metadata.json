@@ -1,0 +1,21 @@
+{"properties": [
+  {
+    "name": "spring.datasource.employee.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.employee.url'"
+  },
+  {
+    "name": "spring.datasource.employee.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.employee.username'"
+  },
+  {
+    "name": "spring.datasource.employee.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.employee.driver-class-name'"
+  }
+]}  "name": "spring.datasource.employee.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.employee.password'"
+  }
+]}

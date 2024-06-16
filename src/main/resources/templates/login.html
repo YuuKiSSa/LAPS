@@ -1,25 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <title>Login</title>
 </head>
 <body>
     <h2>Login</h2>
-    <form th:action="@{/login}" method="post">
+    <form action="/login" method="post">
         <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="userId">User ID:</label>
+            <input type="text" id="userId" name="userId" required>
         </div>
         <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
         <div>
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="Employee">Employee</option>
+                <option value="Manager">Manager</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+        <div>
             <button type="submit">Login</button>
         </div>
-        <div th:if="${error}">
-            <p style="color:red;">[[${error}]]</p>
-        </div>
     </form>
+	<div>
+	        <p style="color:red" th:if="${error != null}" th:text="${error}"></p>
+	    </div>
 </body>
 </html>
