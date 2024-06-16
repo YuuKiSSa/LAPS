@@ -18,6 +18,6 @@ public class StaffServiceImplement implements StaffService{
         return staffRepository.findByUserId(userId);
     }
 	public List<Staff> getSubordinates(int managerHierarchy) {
-        return staffRepository.findByHierarchyGreaterThan(managerHierarchy);
+        return staffRepository.findByHierarchyLessThan(managerHierarchy);
     }
 }
