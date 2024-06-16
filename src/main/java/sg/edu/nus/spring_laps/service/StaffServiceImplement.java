@@ -1,5 +1,7 @@
 package sg.edu.nus.spring_laps.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,7 @@ public class StaffServiceImplement implements StaffService{
     public Staff findByUserId(String userId) {
         return staffRepository.findByUserId(userId);
     }
-
+	public List<Staff> getSubordinates(int managerHierarchy) {
+        return staffRepository.findByHierarchyGreaterThan(managerHierarchy);
+    }
 }

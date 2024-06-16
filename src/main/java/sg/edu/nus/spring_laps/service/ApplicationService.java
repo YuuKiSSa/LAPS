@@ -13,4 +13,6 @@ public interface ApplicationService {
     void saveApplication(Application application); // 添加一个保存方法，以便处理新的字段
 	List<Application> getApplicationsForManager(int hierarchy, int departmentId);
 	Optional<Application> findById(Long applicationId);
+	public List<Application> getApplicationsForSubordinates(List<Staff> subordinates);
+	
 }

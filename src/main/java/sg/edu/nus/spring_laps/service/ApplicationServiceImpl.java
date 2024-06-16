@@ -3,11 +3,13 @@ package sg.edu.nus.spring_laps.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sg.edu.nus.spring_laps.model.Application;
+import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.repository.ApplicationRepository;
 import sg.edu.nus.spring_laps.service.ApplicationService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
@@ -49,5 +51,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public Optional<Application> findById(Long applicationId) {
         return applicationRepository.findById(applicationId);
+    }
+    @Override
+    public List<Application> getApplicationsForSubordinates(List<Staff> subordinates) {
+        return applicationRepository.findByStaffIn(subordinates);
     }
 }

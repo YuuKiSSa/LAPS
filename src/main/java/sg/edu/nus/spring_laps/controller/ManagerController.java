@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import sg.edu.nus.spring_laps.model.Application;
 import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.ApplicationService;
+import sg.edu.nus.spring_laps.service.StaffService;
 import sg.edu.nus.spring_laps.repository.StaffRepository;
 
 import java.util.List;
@@ -29,7 +30,8 @@ public class ManagerController {
 
     @Autowired
     private StaffRepository staffRepository;
-
+    @Autowired
+    private StaffService staffService;
     @GetMapping("/applications/{userId}")
     public String viewApplications(@PathVariable String userId, Model model) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
@@ -40,32 +42,43 @@ public class ManagerController {
         return "manager/applications";
     }
 
-    @GetMapping("/application/{userId}/{applicationId}/details")
+    /*@GetMapping("/application/{userId}/{applicationId}/details")
     public String viewApplicationDetails(@PathVariable String userId, @PathVariable Long applicationId, Model model) {
         Optional<Application> applicationOpt = applicationService.findById(applicationId);
         if (applicationOpt.isPresent()) {
             Application application = applicationOpt.get();
             if (application.getStaff() != null) {
                 model.addAttribute("application", application);
-                model.addAttribute("userId", userId);  // 添加 userId 以便返回时使用
+                model.addAttribute("userId", userId);
                 return "manager/applicationDetails";
             } else {
+                // Handle case where staff is null
                 model.addAttribute("error", "Staff information is missing for this application.");
-                return "error/500"; // 或者您可以创建一个自定义的错误页面
+                return "error/500";
             }
         } else {
+            // Handle case where application is not found
             return "error/404";
+        }*/
+    
+    @GetMapping("/application/{userId}/{applicationId}/details")
+    public String viewApplicationDetails(@PathVariable String userId, @PathVariable Long applicationId, Model model) {
+        Optional<Application> applicationOpt = applicationService.findById(applicationId);
+        model.addAttribute("applicationOpt", applicationOpt);
+        model.addAttribute("userId", userId);
+        return "manager/applicationDetails";
         }
-    }
 
     @GetMapping("/subordinates/{userId}/history")
     public String viewSubordinatesHistory(@PathVariable String userId, Model model) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
-        List<Application> applications = applicationService.getApplicationsForManager(manager.getHierarchy(), manager.getDepartment().getId());
+        List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy());
+        List<Application> applications = applicationService.getApplicationsForSubordinates(subordinates);
         model.addAttribute("applications", applications);
+        model.addAttribute("userId", userId);
         return "manager/subordinatesHistory";
     }
-
+    
     @PostMapping("/applications/{id}/approve")
     public ResponseEntity<?> approveApplication(@PathVariable Long id, @RequestParam String userId) {
         applicationService.approveApplication(id);
