@@ -18,7 +18,7 @@ public class StaffController {
     @GetMapping("/staffDashboard")
     public String staffDashboard(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
-        Staff staff = staffService.findStaffById("111111");
+        Staff staff = staffService.findByUserId(userId);
         if (staff == null) {
             return "redirect:/login";
         }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Application</title>
+    <link rel="stylesheet" href="/create-application.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/create-application-script.js"></script>
+</head>
+<body>
+<h1>Application Form</h1>
+<div class="container">
+    <form th:action="@{/staffDashboard/createApplication}" th:object="${applicationForm}" method="post">
+        <div>
+            <input type="hidden" id="userId" name="userId" th:value="${applicationForm.userId}"/>
+        </div>
+        <div>
+            <label for="applicationType">Application Type:</label>
+            <select id="applicationType" name="applicationType">
+                <option th:each="type : ${applicationTypes}" th:value="${type.type}" th:text="${type.type}">Type</option>
+            </select>
+        </div>
+        <div>
+            <label for="startDate">Start Date:</label>
+            <input type="text" id="startDate" name="startTime" />
+            <div th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="error"></div>
+        </div>
+        <div>
+            <label for="endDate">End Date:</label>
+            <input type="text" id="endDate" name="endTime" />
+            <div th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="error"></div>
+        </div>
+        <div id="select"></div>
+        <div>
+            <label for="reason">Reason:</label>
+            <textarea id="reason" name="reason"></textarea>
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+    <div class="error-messages" th:if="${globalErrors != null}">
+        <ul>
+            <li th:each="error : ${globalErrors}" th:text="${error.defaultMessage}"></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

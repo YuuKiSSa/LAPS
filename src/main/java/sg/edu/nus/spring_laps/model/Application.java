@@ -2,6 +2,7 @@ package sg.edu.nus.spring_laps.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -9,10 +10,12 @@ public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date startTime;
-    private Date endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     @Column(length = 10)
     private String status;
+    @Column(length = 1000)
+    private String description;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "user_id"))
     private Staff staff;
@@ -30,19 +33,19 @@ public class Application {
         this.id = id;
     }
 
-    public Date getStartTime() {
-        return this.startTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
-        return this.endTime;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -52,6 +55,14 @@ public class Application {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Staff getStaff() {
@@ -77,8 +88,9 @@ public class Application {
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", status='" + status + '\'' +
-                ", staff=" + staff +
-                ", applicationType=" + applicationType +
+                ", description='" + description + '\'' +
+                ", staff=" + staff.getName() +
+                ", applicationType=" + applicationType.getType() +
                 '}';
     }
 }

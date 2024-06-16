@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/staff-dashboard.css">
     <title>Dashboard</title>
 </head>
 <body>
-<a href="/logout">Logout</a>
 <header>
-    <main>
+    <div class="welcome-info">
         <h1>Welcome, <span th:text="${staff.name}"></span>!</h1>
-        <p>Your hierarchy: <span th:text="${staff.hierarchy}"></span></p>
-        <p>Email: <span th:text="${staff.email}"></span></p>
-    </main>
+        <div class="user-info">
+            <p>Your hierarchy: <span th:text="${staff.hierarchy}"></span></p>
+            <p>Email: <span th:text="${staff.email}"></span></p>
+        </div>
+    </div>
     <nav>
         <ul>
-            <li><a href="#">Apply a Leave</a></li>
+            <li><a href="/staffDashboard/createApplication">Apply a Leave</a></li>
             <li><a href="#">View Leave History</a></li>
+            <li><a href="/logout">Logout</a></li>
         </ul>
     </nav>
 </header>
-
 </body>
 </html>

@@ -7,15 +7,17 @@ import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.repository.StaffRepository;
 
 @Service
+@Transactional
 public class StaffServiceImpl implements StaffService {
     @Autowired
-    private StaffRepository staffRepo;
+    private StaffRepository staffRepository;
 
-    @Transactional
-    public Staff findStaffById(String userId) {
-        if (staffRepo.findById(userId).isPresent()) {
-            return staffRepo.findById(userId).get();
+    @Override
+    public Staff findByUserId(String userId) {
+        if (staffRepository.findById(userId).isPresent()) {
+            return staffRepository.findById(userId).get();
         }
         return null;
     }
+
 }
