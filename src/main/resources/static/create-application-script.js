@@ -30,5 +30,15 @@ $(document).ready(function(){
         }
     }
     checkCompensationLeave();
+
+    var applicationType = $('#applicationType').val();
+    if (applicationType === "Compensation Leave") {
+        var compensationHours = parseInt(document.getElementById("compensationHours").value);
+        if (compensationHours < 4) {
+            alert("You don't have enough compensation hours!");
+            window.location.href = "/staffDashboard";
+        }
+    }
+
 });
 

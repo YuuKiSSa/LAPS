@@ -27,7 +27,7 @@ public class ApplicationController {
     StaffService staffService;
 
     @GetMapping("/createApplication")
-    public String createApplication(@RequestParam("type") int type, Model model, HttpSession session) {
+    public String createApplication(@RequestParam(value = "type", required = false) int type, Model model, HttpSession session) {
         ApplicationForm applicationForm = new ApplicationForm();
         if (session.getAttribute("userId") == null){
             return "redirect:/login";
@@ -45,8 +45,8 @@ public class ApplicationController {
 
         if (appTypeName.equals("Compensation Leave")){
             long time = compensationTime(staff);
-            System.out.println(time);
-            model.addAttribute("compensationTime", time);
+            model.addAttribute("compensationHours", time);
+            model.addAttribute("compensationTimes", time/4);
         }
         switch (appTypeName){
             case "Annual Leave": return "annual-leave";
@@ -65,12 +65,17 @@ public class ApplicationController {
             model.addAttribute("applicationTypes", applicationService.findAllApplicationTypes());
             model.addAttribute("fieldErrors", bindingResult.getFieldErrors());
             model.addAttribute("globalErrors", bindingResult.getGlobalErrors());
-            switch (applicationForm.getApplicationType()){
-                case "Annual Leave": return "annual-leave";
-                case "Medical Leave": return  "medical-leave";
-                case "Compensation Leave": return  "compensation-leave";
-                case "Compensation": return  "compensation";
-                default: return "create-application";
+            switch (applicationForm.getApplicationType()) {
+                case "Annual Leave":
+                    return "annual-leave";
+                case "Medical Leave":
+                    return "medical-leave";
+                case "Compensation Leave":
+                    return "compensation-leave";
+                case "Compensation":
+                    return "compensation";
+                default:
+                    return "create-application";
             }
         }
         Staff staff = staffService.findByUserId(applicationForm.getUserId());
@@ -125,11 +130,16 @@ public class ApplicationController {
 
 
     public long compensationTime(Staff staff){
-        ApplicationType applicationType = applicationService.findApplicationTypeByName("Compensation");
-        List<Application> applications = applicationService.findApplicationsByStaffAndApplicationType(staff, applicationType);
+        ApplicationType applicationTypePlus = applicationService.findApplicationTypeByName("Compensation");
+        ApplicationType applicationTypeSub = applicationService.findApplicationTypeByName("Compensation Leave");
+        List<Application> applicationsPlus = applicationService.findApplicationsByStaffAndApplicationType(staff, applicationTypePlus);
+        List<Application> applicationsSub = applicationService.findApplicationsByStaffAndApplicationType(staff, applicationTypeSub);
         Duration totalDuration = Duration.ZERO;
-        for (Application application : applications) {
+        for (Application application : applicationsPlus) {
             totalDuration = totalDuration.plus(Duration.between(application.getStartTime(), application.getEndTime()));
+        }
+        for (Application application : applicationsSub) {
+            totalDuration = totalDuration.minus(Duration.between(application.getStartTime(), application.getEndTime()));
         }
         return totalDuration.toHours();
     }

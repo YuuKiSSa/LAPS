@@ -11,46 +11,50 @@
 </head>
 <body>
 <h1>Application Form</h1>
-<div class="container">
-    <form th:action="@{/staffDashboard/createApplication}" th:object="${applicationForm}" method="post">
-        <div>
-            <input type="hidden" id="userId" name="userId" th:value="${applicationForm.userId}"/>
+<input type="hidden" id="compensationHours" th:value="${compensationHours}" />
+    <div class="container">
+        <h3 th:text="'You have ' + ${compensationHours} + ' hours compensated.'">CompensationHours</h3>
+        <h3 th:text="'You can apply ' + ${compensationTimes} + ' times compensation leave.'">CompensationTimes</h3>
+        <form th:action="@{/staffDashboard/createApplication}" th:object="${applicationForm}" method="post">
+            <div>
+                <input type="hidden" id="userId" name="userId" th:value="${applicationForm.userId}"/>
+            </div>
+            <div>
+                <label for="applicationType">Application Type:</label>
+                <input type="text" id="applicationType" name="applicationType" th:value="${applicationForm.applicationType}" readonly>
+            </div>
+            <div id="annualLeaveDays"></div>
+            <div>
+                <label for="startTime">Start Date:</label>
+                <input type="text" id="startTime" name="startTime" />
+                <div th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="error"></div>
+            </div>
+            <div>
+                <label for="endTime">End Date:</label>
+                <input type="text" id="endTime" name="endTime" />
+                <div th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="error"></div>
+            </div>
+            <div id="select">
+                <label>Select Time:</label>
+                <select id='selectTime' name='selectTime'>
+                <option value='Morning'>Morning</option>
+                <option value='Afternoon'>Afternoon</option>
+                </select>
+            </div>
+            <div>
+                <label for="reason">Reason:</label>
+                <textarea id="reason" name="reason"></textarea>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+                <button type="button" id="backButton" onclick="window.location.href = '/staffDashboard'">Back</button>
+            </div>
+        </form>
+        <div class="error-messages" th:if="${globalErrors != null}">
+            <ul>
+                <li th:each="error : ${globalErrors}" th:text="${error.defaultMessage}"></li>
+            </ul>
         </div>
-        <div>
-            <label for="applicationType">Application Type:</label>
-            <input type="text" id="applicationType" name="applicationType" th:value="${applicationForm.applicationType}" readonly>
-        </div>
-        <div id="annualLeaveDays"></div>
-        <div>
-            <label for="startTime">Start Date:</label>
-            <input type="text" id="startTime" name="startTime" />
-            <div th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="error"></div>
-        </div>
-        <div>
-            <label for="endTime">End Date:</label>
-            <input type="text" id="endTime" name="endTime" />
-            <div th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="error"></div>
-        </div>
-        <div id="select">
-            <label>Select Time:</label>
-            <select id='selectTime' name='selectTime'>
-            <option value='Morning'>Morning</option>
-            <option value='Afternoon'>Afternoon</option>
-            </select>
-        </div>
-        <div>
-            <label for="reason">Reason:</label>
-            <textarea id="reason" name="reason"></textarea>
-        </div>
-        <div>
-            <button type="submit">Submit</button>
-        </div>
-    </form>
-    <div class="error-messages" th:if="${globalErrors != null}">
-        <ul>
-            <li th:each="error : ${globalErrors}" th:text="${error.defaultMessage}"></li>
-        </ul>
     </div>
-</div>
 </body>
 </html>

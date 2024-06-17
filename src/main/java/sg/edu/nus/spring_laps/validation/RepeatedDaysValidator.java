@@ -27,7 +27,8 @@ public class RepeatedDaysValidator implements ConstraintValidator<ValidRepeatedD
         List<Application> applications = applicationService.findApplicationsByStaff(staff);
         for (Application application : applications) {
             if ((form.getStartTime().isAfter(application.getStartTime())&&form.getStartTime().isBefore(application.getEndTime()))||
-                    (form.getEndTime().isAfter(application.getStartTime()) && form.getEndTime().isBefore(application.getEndTime()))) {
+                    (form.getEndTime().isAfter(application.getStartTime()) && form.getEndTime().isBefore(application.getEndTime()))||
+                    (form.getStartTime().getDayOfYear() == application.getStartTime().getDayOfYear() )) {
                 return false;
             }
         }
