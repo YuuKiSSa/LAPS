@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Leave Application Processing System</title>
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
 </head>
 <body>
-    <h2>Login</h2>
-    <form action="/login" method="post">
-        <div>
-            <label for="userId">User ID:</label>
-            <input type="text" id="userId" name="userId" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <label for="role">Role:</label>
-            <select id="role" name="role" required>
-                <option value="Employee">Employee</option>
-                <option value="Manager">Manager</option>
-                <option value="Admin">Admin</option>
-            </select>
-        </div>
-        <div>
-            <button type="submit">Login</button>
-        </div>
-    </form>
-	<div>
-	        <p style="color:red" th:if="${error != null}" th:text="${error}"></p>
-	    </div>
+    <div class="header">
+        <img src="/picture/logo.png" alt="Logo" class="logo">
+        <h1>Leave Application Processing System</h1>
+    </div>
+    <div class="login-container" id="login-container">
+        <h2>Login</h2>
+        <form action="/login" method="post">
+            <div class="input-group">
+                <label for="userId">User ID:</label>
+                <input type="text" id="userId" name="userId" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="input-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" required>
+                    <option value="Employee">Employee</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+			<div class="error-container">
+			    <p class="error-message" th:if="${error != null}" th:text="${error}"></p>
+			</div>
+            <div class="button-container">
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
