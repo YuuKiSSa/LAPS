@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sg.edu.nus.spring_laps.model.Application;
 import sg.edu.nus.spring_laps.model.ApplicationForm;
@@ -15,6 +14,7 @@ import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.ApplicationService;
 import sg.edu.nus.spring_laps.service.StaffService;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,18 +27,34 @@ public class ApplicationController {
     StaffService staffService;
 
     @GetMapping("/createApplication")
-    public String createApplication(Model model, HttpSession session) {
+    public String createApplication(@RequestParam("type") int type, Model model, HttpSession session) {
         ApplicationForm applicationForm = new ApplicationForm();
         if (session.getAttribute("userId") == null){
             return "redirect:/login";
         }else{
             applicationForm.setUserId(session.getAttribute("userId").toString());
         }
-        model.addAttribute("applicationForm", applicationForm);
-        List<ApplicationType> applicationTypes = applicationService.findAllApplicationTypes();
-        model.addAttribute("applicationTypes", applicationTypes);
+        ApplicationType applicationType = applicationService.findApplicationTypeById(type);
+        model.addAttribute("applicationType", applicationType);
+        String appTypeName = applicationType.getType();
+        applicationForm.setApplicationType(appTypeName);
 
-        return "create-application";
+        model.addAttribute("applicationForm", applicationForm);
+        Staff staff = staffService.findByUserId(session.getAttribute("userId").toString());
+        model.addAttribute("annualLeaveDays", staff.getDepartment().getAnnualLeave());
+
+        if (appTypeName.equals("Compensation Leave")){
+            long time = compensationTime(staff);
+            System.out.println(time);
+            model.addAttribute("compensationTime", time);
+        }
+        switch (appTypeName){
+            case "Annual Leave": return "annual-leave";
+            case "Medical Leave": return  "medical-leave";
+            case "Compensation Leave": return  "compensation-leave";
+            case "Compensation": return  "compensation";
+            default: return "create-application";
+        }
     }
 
     @PostMapping("/createApplication")
@@ -49,7 +65,13 @@ public class ApplicationController {
             model.addAttribute("applicationTypes", applicationService.findAllApplicationTypes());
             model.addAttribute("fieldErrors", bindingResult.getFieldErrors());
             model.addAttribute("globalErrors", bindingResult.getGlobalErrors());
-            return "create-application";
+            switch (applicationForm.getApplicationType()){
+                case "Annual Leave": return "annual-leave";
+                case "Medical Leave": return  "medical-leave";
+                case "Compensation Leave": return  "compensation-leave";
+                case "Compensation": return  "compensation";
+                default: return "create-application";
+            }
         }
         Staff staff = staffService.findByUserId(applicationForm.getUserId());
 
@@ -99,5 +121,16 @@ public class ApplicationController {
         }
         model.addAttribute("displayApplication", application);
         return "display-application";
+    }
+
+
+    public long compensationTime(Staff staff){
+        ApplicationType applicationType = applicationService.findApplicationTypeByName("Compensation");
+        List<Application> applications = applicationService.findApplicationsByStaffAndApplicationType(staff, applicationType);
+        Duration totalDuration = Duration.ZERO;
+        for (Application application : applications) {
+            totalDuration = totalDuration.plus(Duration.between(application.getStartTime(), application.getEndTime()));
+        }
+        return totalDuration.toHours();
     }
 }

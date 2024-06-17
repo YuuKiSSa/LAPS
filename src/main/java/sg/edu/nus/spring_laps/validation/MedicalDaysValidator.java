@@ -23,11 +23,12 @@ public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLea
 
     @Override
     public boolean isValid(ApplicationForm form, ConstraintValidatorContext context) {
-        if (!form.getApplicationType().equals("Medical")){
+        if (!form.getApplicationType().equals("Medical Leave")){
             return true;
         }
         Staff staff = staffService.findByUserId(form.getUserId());
-        List<Application> applications = applicationService.findApplicationsByStaff(staff);
+        List<Application> applications = applicationService.findApplicationsByStaffAndYear(staff, form.getStartTime().getYear());
+        System.out.println(applications);
         Duration totalDuration = Duration.ZERO;
         for (Application application : applications) {
             totalDuration = totalDuration.plus(Duration.between(application.getStartTime(), application.getEndTime())).plusHours(16);
@@ -40,7 +41,7 @@ public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLea
             context.disableDefaultConstraintViolation();
             long daysUsed = totalDurationNow.toDays() - Duration.between(form.getStartTime(), form.getEndTime()).toDays();
             long daysCurrent = 60 - daysUsed;
-            String errorMessage = String.format("Your medical leave exceeded: \nTotal used days: %d, \nCurrent used days: %d", daysUsed, daysCurrent);
+            String errorMessage = String.format("Your medical leave exceeded in this year: \nTotal used days: %d, \nCurrent used days: %d", daysUsed, daysCurrent);
             context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
             return false;
         }

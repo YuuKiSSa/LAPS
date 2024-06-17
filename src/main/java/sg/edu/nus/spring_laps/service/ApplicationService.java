@@ -12,4 +12,7 @@ public interface ApplicationService {
     ApplicationType findApplicationTypeByName(String applicationTypeName);
     Application findApplicationById(Long applicationId);
     List<Application> findApplicationsByStaff(Staff staff);
+    ApplicationType findApplicationTypeById(int applicationTypeId);
+    List<Application> findApplicationsByStaffAndYear(Staff staff, int year);
+    List<Application> findApplicationsByStaffAndApplicationType(Staff staff, ApplicationType type);
 }

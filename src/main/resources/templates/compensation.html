@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Application</title>
+    <title>Compensation</title>
     <link rel="stylesheet" href="/create-application.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/create-application-script.js"></script>
+    <script src="/compensation-script.js"></script>
 </head>
 <body>
 <h1>Application Form</h1>
@@ -18,9 +18,7 @@
         </div>
         <div>
             <label for="applicationType">Application Type:</label>
-            <select id="applicationType" name="applicationType">
-                <option th:each="type : ${applicationTypes}" th:value="${type.type}" th:text="${type.type}">Type</option>
-            </select>
+            <input type="text" id="applicationType" name="applicationType" th:value="${applicationForm.applicationType}" readonly>
         </div>
         <div id="annualLeaveDays"></div>
         <div>
@@ -48,6 +46,5 @@
         </ul>
     </div>
 </div>
-
 </body>
 </html>

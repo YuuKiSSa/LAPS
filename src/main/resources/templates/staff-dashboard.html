@@ -17,7 +17,12 @@
     </div>
     <nav>
         <ul>
-            <li><a href="/staffDashboard/createApplication">Apply a Leave</a></li>
+            <select onchange="location = this.value;">
+                <option value="#" selected disabled hidden>Submit an application</option>
+                <option th:each="type : ${applicationTypes}"
+                        th:value="'/staffDashboard/createApplication?type=' + ${type.id}"
+                        th:text="${type.type}"></option>
+            </select>
             <li><a href="#">View Leave History</a></li>
             <li><a href="/logout">Logout</a></li>
         </ul>

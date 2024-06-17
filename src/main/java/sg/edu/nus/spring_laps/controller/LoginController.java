@@ -12,16 +12,15 @@ import sg.edu.nus.spring_laps.model.Admin;
 import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.StaffService;
 
-
 @Controller
 	public class LoginController {
-	    @Autowired
-	    private StaffService staffService;
+	@Autowired
+	private StaffService staffService;
 
-		@GetMapping("/login")
-		public String showLoginPage() {
-			return "login";
-		}
+	@GetMapping("/login")
+	public String showLoginPage() {
+		return "login";
+	}
 
 	@PostMapping("/login")
 	public String login(@RequestParam("userId") String userId,
@@ -49,6 +48,12 @@ import sg.edu.nus.spring_laps.service.StaffService;
 		}
 		model.addAttribute("error", "Invalid username or password");
 		return "login";
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/login";
 	}
 
 }
