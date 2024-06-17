@@ -3,12 +3,14 @@ package sg.edu.nus.spring_laps.model;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import sg.edu.nus.spring_laps.validation.ValidMedicalLeaveDays;
 import sg.edu.nus.spring_laps.validation.ValidRangeDate;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 @ValidRangeDate
+@ValidMedicalLeaveDays
 public class ApplicationForm {
     private String userId;
     private String applicationType;
@@ -18,12 +20,6 @@ public class ApplicationForm {
     private LocalDateTime endTime;
     private String selectTime;
     private String reason;
-
-    @AssertTrue(message = "Medical Leave should be limited to 60 days.")
-    public boolean medicalLeaveValidation() {
-        Duration duration = Duration.between(startTime, endTime);
-        return duration.toDays() <= 60;
-    }
 
     public String getUserId() {
         return userId;
