@@ -18,10 +18,10 @@ public class StaffController {
     @GetMapping("/staffDashboard")
     public String staffDashboard(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
-        Staff staff = staffService.findByUserId(userId);
-        if (staff == null) {
+        if (userId == null) {
             return "redirect:/login";
         }
+        Staff staff = staffService.findByUserId(userId);
         model.addAttribute("staff", staff);
         return "staff-dashboard";
     }

@@ -98,7 +98,7 @@ public class Staff {
                 ", email='" + email + '\'' +
                 ", status=" + status +
                 ", hierarchy=" + hierarchy +
-                ", department='" + department + '\'' +
+                ", department='" + department.getName() + '\'' +
                 ", applications=" + applications +
                 '}';
     }

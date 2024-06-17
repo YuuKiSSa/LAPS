@@ -81,9 +81,9 @@ button:hover {
 }
 
 .error-messages {
-    text-align: left;
     color: red;
     margin-top: 1em;
+    white-space: pre-line;
 }
 
 .error-messages ul {

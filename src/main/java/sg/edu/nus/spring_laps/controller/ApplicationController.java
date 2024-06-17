@@ -97,7 +97,6 @@ public class ApplicationController {
         if (application == null) {
             return "application-error";
         }
-        System.out.println(application);
         model.addAttribute("displayApplication", application);
         return "display-application";
     }
