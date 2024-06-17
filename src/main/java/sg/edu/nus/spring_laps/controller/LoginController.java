@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import sg.edu.nus.spring_laps.model.Admin;
 import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.StaffService;
 
@@ -17,27 +18,38 @@ import sg.edu.nus.spring_laps.service.StaffService;
 	    @Autowired
 	    private StaffService staffService;
 
-	    @GetMapping("/login")
-	    public String login() {
-	        return "login";
-	    }
+		@GetMapping("/login")
+		public String showLoginPage() {
+			return "login";
+		}
 
-	    @PostMapping("/login")
-	    public String authenticate(@RequestParam("username") String userId, @RequestParam("password") String password,
-								   Model model, HttpSession session) {
-	        Staff user = staffService.findByUserId(userId);
-	        if (user != null && user.getPassword().equals(password)) {
-	            model.addAttribute("userId", userId);
-	            model.addAttribute("role", user.getHierarchy());
-				session.setAttribute("userId", userId);
-	            return "redirect:/staffDashboard";
-	        } else {
-	            model.addAttribute("error", "Invalid username or password");
-	            return "login";
-	        }
-	        
-	        
-	        
-	    }
+	@PostMapping("/login")
+	public String login(@RequestParam("userId") String userId,
+						@RequestParam("password") String password,
+						@RequestParam("role") String role,
+						Model model, HttpSession session) {
+		if (role.equals("Admin")) {
+			Admin admin = staffService.authenticateAdmin(userId, password);
+			if (admin != null) {
+				model.addAttribute("user", admin);
+				session.setAttribute("userId", admin.getUserId());
+				return "adminHome";
+			}
+		} else {
+			Staff staff = staffService.authenticateStaff(userId, password);
+			if (staff != null) {
+				model.addAttribute("user", staff);
+				session.setAttribute("userId", staff.getUserId());
+				if (staff.getHierarchy() >= 1) {
+					return "managerHome";
+				} else {
+					return "redirect:/staffDashboard";
+				}
+			}
+		}
+		model.addAttribute("error", "Invalid username or password");
+		return "login";
+	}
+
 }
 

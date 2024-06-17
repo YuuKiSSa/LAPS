@@ -17,6 +17,9 @@ public class DateValidator implements ConstraintValidator<ValidRangeDate, Applic
         if (startTime == null || endTime == null) {
             return true;
         }
+        if(form.getApplicationType().equals("Compensation Leave")){
+            return true;
+        }
 
         if (!startTime.isBefore(endTime)) {
             return false;

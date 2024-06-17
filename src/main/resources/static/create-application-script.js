@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var startDatePicker = flatpickr("#startDate", {
+    var startDatePicker = flatpickr("#startTime", {
         dateFormat: "Y-m-d",
         enableTime: true
     });
-    var endDatePicker = flatpickr("#endDate", {
+    var endDatePicker = flatpickr("#endTime", {
         dateFormat: "Y-m-d",
         enableTime: true
     });
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
             endDatePicker.set("dateFormat", "Y-m-d");
         }
     });
+
 });
 
 $(document).ready(function(){
@@ -29,8 +30,31 @@ $(document).ready(function(){
                "<option value='Morning'>Morning</option>\n" +
                "<option value='Afternoon'>Afternoon</option>\n" +
                "</select>");
+           checkCompensationLeave();
        }else{
            $("#select").empty();
        }
     });
+
+    $('#startTime').change(function(){
+        syncEndDate();
+    })
+
+    function checkCompensationLeave(){
+        var applicationType = $('#applicationType').val();
+        if(applicationType === "Compensation Leave"){
+            var startDate = $('#startTime').val();
+            syncEndDate();
+        }
+    }
+
+    function syncEndDate() {
+        var applicationType = $('#applicationType').val();
+        if (applicationType === "Compensation Leave") {
+            var startTime = $('#startTime').val();
+            $('#endTime').val(startTime);
+        }
+    }
+    checkCompensationLeave();
 });
+

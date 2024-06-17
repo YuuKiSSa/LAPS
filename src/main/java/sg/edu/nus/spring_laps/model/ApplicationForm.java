@@ -5,12 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import sg.edu.nus.spring_laps.validation.ValidMedicalLeaveDays;
 import sg.edu.nus.spring_laps.validation.ValidRangeDate;
+import sg.edu.nus.spring_laps.validation.ValidRepeatedDays;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 @ValidRangeDate
 @ValidMedicalLeaveDays
+@ValidRepeatedDays
 public class ApplicationForm {
     private String userId;
     private String applicationType;
