@@ -2,51 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Manager Applications</title>
-	<script>
-	        function handleApprove(id, userId) {
-	            fetch(`/manager/applications/${id}/approve`, {
-	                method: 'POST',
-	                headers: {
-	                    'Content-Type': 'application/x-www-form-urlencoded',
-	                },
-	                body: new URLSearchParams({
-	                    userId: userId
-	                })
-	            })
-	            .then(response => response.text())
-	            .then(data => {
-	                if (data === 'success') {
-	                    document.getElementById('leave-application-' + id).remove();
-	                } else {
-	                    alert('Failed to approve leave');
-	                }
-	            })
-	            .catch(error => console.error('Error:', error));
-	        }
-
-        function handleReject(id, userId) {
-            const comment = document.getElementById('reject-comments-' + id).value;
-            fetch(`/manager/applications/${id}/reject`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    comment: comment,
-                    userId: userId
-                })
-            })
-            .then(response => response.text())
-            .then(data => {
-                if (data === 'success') {
-                    document.getElementById('leave-application-' + id).remove();
-                } else {
-                    alert('Failed to reject leave');
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-    </script>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -79,7 +34,31 @@
 </style>
 </head>
 <body>
-<h1>Pending Leave Applications</h1>
+	<h1>Manager Dashboard</h1>
+	
+	<h2>Generate Leave Report</h2>
+	    <form action="/manager/report/leave" method="get">
+	        <label for="startTime">Start Time:</label>
+	        <input type="date" id="startTime" name="startTime" required>
+	        <label for="endTime">End Time:</label>
+	        <input type="date" id="endTime" name="endTime" required>
+	        <label for="applicationtype">Type:</label>
+	        <select id="applicationtype" name="applicationtype">
+	            <option value="annual">Annual</option>
+	            <option value="compensation">Compensation</option>
+	            <option value="medical">Medical</option>
+	            <option value="all">All</option>
+	        </select>
+	        <button type="submit">Generate Report</button>
+	    </form>
+
+	    <h2>Generate Compensation Report</h2>
+	    <form action="/manager/report/compensation" method="get">
+	        <label for="userId">UserID (optional):</label>
+	        <input type="text" id="userId" name="userId">
+	        <button type="submit">Generate Report</button>
+	    </form>
+<h2>Pending Leave Applications</h2>
 <div th:each="entry : ${applicationsByStaff}">
     <h2 th:text="${entry.key.name}">Staff Name</h2>
     <table>
@@ -94,27 +73,25 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="app : ${entry.value}" th:id="'leave-application-' + app.id">
-                <td th:text="${app.applicationtype}">Leave Type</td>
-                <td th:text="${#dates.format(app.startTime, 'yyyy-MM-dd')}">Start Date</td>
-                <td th:text="${#dates.format(app.endTime, 'yyyy-MM-dd')}">End Date</td>
-                <td th:text="${app.status}">Status</td>
-                <td th:text="${app.description}">Description</td>
-                <td>
-                    <a th:href="@{/manager/application/{userId}/{applicationId}/details(userId=${userId}, applicationId=${app.id})}">View Details</a>
-                    <form th:action="@{/manager/applications/{id}/approve(id=${app.id})}" method="post" 
-                        onsubmit="event.preventDefault(); handleApprove(app.id, '${userId}');">
-                        <input type="hidden" name="userId" th:value="${userId}"/>
-                        <button type="submit">Approve</button>
-                    </form>
-                    <form th:action="@{/manager/applications/{id}/reject(id=${app.id})}" method="post" 
-                        onsubmit="event.preventDefault(); handleReject(app.id, '${userId}');">
-                        <input type="text" name="comment" placeholder="Comment" required>
-                        <input type="hidden" name="userId" th:value="${userId}"/>
-                        <button type="submit">Reject</button>
-                    </form>
-                </td>
-            </tr>
+			<tr th:each="app : ${entry.value}" >
+			               <td th:text="${app.applicationtype}">Leave Type</td>
+			               <td th:text="${#dates.format(app.startTime, 'yyyy-MM-dd')}">Start Date</td>
+			               <td th:text="${#dates.format(app.endTime, 'yyyy-MM-dd')}">End Date</td>
+			               <td th:text="${app.status}">Status</td>
+			               <td th:text="${app.description}">Description</td>
+						   
+			                   <a th:href="@{/manager/application/{userId}/{applicationId}/details(userId=${userId}, applicationId=${app.id})}">View Details</a>
+			                   <form th:action="@{/manager/applications/{id}/approve(id=${app.id})}" method="post">
+			                       <input type="hidden" name="userId" th:value="${userId}"/>
+			                       <button type="submit">Approve</button>
+			                   </form>
+			                   <form th:action="@{/manager/applications/{id}/reject(id=${app.id})}" method="post">
+			                       <input type="text" name="comment" placeholder="Comment" required>
+			                       <input type="hidden" name="userId" th:value="${userId}"/>
+			                       <button type="submit">Reject</button>
+			                   </form>
+			               </td>
+			           </tr>
         </tbody>
     </table>
 </div>
