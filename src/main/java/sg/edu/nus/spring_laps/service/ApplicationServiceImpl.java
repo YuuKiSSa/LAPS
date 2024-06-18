@@ -50,8 +50,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationTypeRepository.findById(ApplicationTypeId).get();
     }
     @Override
-    public List<Application> findApplicationsByStaffAndYear(Staff staff, int year){
-        return applicationRepository.findByStaffAndYear(staff, year);
+    public List<Application> findMedicalLeaveByStaffAndYear(Staff staff, int year){
+        return applicationRepository.findMedicalLeaveByStaffAndYear(staff, year);
     }
     @Override
     public List<Application> findApplicationsByStaffAndApplicationType(Staff staff, ApplicationType type) {

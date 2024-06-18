@@ -9,7 +9,6 @@ import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.ApplicationService;
 import sg.edu.nus.spring_laps.service.StaffService;
 
-import java.time.Duration;
 import java.util.List;
 
 public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLeaveDays, ApplicationForm> {
@@ -27,20 +26,18 @@ public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLea
             return true;
         }
         Staff staff = staffService.findByUserId(form.getUserId());
-        List<Application> applications = applicationService.findApplicationsByStaffAndYear(staff, form.getStartTime().getYear());
-        Duration totalDuration = Duration.ZERO;
+        List<Application> applications = applicationService.findMedicalLeaveByStaffAndYear(staff, form.getStartTime().getYear());
+        int medicalLeaveDays = 0;
         for (Application application : applications) {
-            totalDuration = totalDuration.plus(Duration.between(application.getStartTime(), application.getEndTime())).plusHours(16);
+            medicalLeaveDays += application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;
         }
-
-        Duration totalDurationNow = totalDuration.plus(Duration.between(form.getStartTime(), form.getEndTime()));
-        if (totalDurationNow.toDays() <= 60){
+        int medicalLeaveDaysNow = form.getEndTime().getDayOfYear() - form.getStartTime().getDayOfYear() + 1;
+        if (medicalLeaveDays + medicalLeaveDaysNow <= 60){
             return true;
         }else{
             context.disableDefaultConstraintViolation();
-            long daysUsed = totalDurationNow.toDays() - Duration.between(form.getStartTime(), form.getEndTime()).toDays();
-            long daysCurrent = 60 - daysUsed;
-            String errorMessage = String.format("Your medical leave exceeded in this year: \nTotal used days: %d, \nCurrent used days: %d", daysUsed, daysCurrent);
+            long daysCurrent = 60 - medicalLeaveDays;
+            String errorMessage = String.format("Your medical leave exceeded in this year: \nTotal used days: %d, \nCurrent used days: %d", medicalLeaveDays, daysCurrent);
             context.buildConstraintViolationWithTemplate(errorMessage).addConstraintViolation();
             return false;
         }

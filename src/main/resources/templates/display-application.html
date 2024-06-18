@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="/display-application.css">
+    <script src="/display-application-script.js"></script>
     <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
     <title>Display Application</title>
 </head>
@@ -11,7 +12,7 @@
     <div class="application-details">
         <div class="detail">
             <label class="label">Application ID:</label>
-            <span th:text="${displayApplication.id}"></span>
+            <span id = "applicationId" th:text="${displayApplication.id}"></span>
         </div>
         <div class="detail">
             <label class="label">Application Staff:</label>
@@ -33,7 +34,8 @@
             <label class="label">Reason:</label>
             <span th:text="${displayApplication.description}"></span>
         </div>
-        <button type="button" id="backButton" onclick="window.location.href = '/staffDashboard'">Back</button>
+        <button type="button" id="backButton" onclick="window.history.back()">Back</button>
+        <button type="button" id="editButton">Edit</button>
     </div>
 </div>
 </body>

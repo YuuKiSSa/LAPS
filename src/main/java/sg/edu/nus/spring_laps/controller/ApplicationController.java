@@ -122,11 +122,13 @@ public class ApplicationController {
     }
 
     @GetMapping("/displayApplication")
-    public String displayApplication(HttpSession session, Model model) {
-        if (session.getAttribute("applicationId") == null) {
+    public String displayApplication(@RequestParam(value = "applicationId", required = false) Long applicationId, HttpSession session, Model model) {
+        if (session.getAttribute("applicationId") == null && applicationId == null) {
             return "application-error";
         }
-        Long applicationId = (Long) session.getAttribute("applicationId");
+        if (applicationId == null) {
+            applicationId = (Long) session.getAttribute("applicationId");
+        }
         Application application = applicationService.findApplicationById(applicationId);
         if (application == null) {
             return "application-error";
@@ -135,6 +137,27 @@ public class ApplicationController {
         return "display-application";
     }
 
+    @GetMapping("/editApplication")
+    public String editApplication(@RequestParam("applicationId") Long applicationId, HttpSession session, Model model) {
+        Application application = applicationService.findApplicationById(applicationId);
+        if (application == null) {
+            return "application-error";
+        }
+
+        return "edit-application";
+    }
+
+    @GetMapping("/history")
+    public String history(HttpSession session, Model model) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return "/login";
+        }
+        Staff staff = staffService.findByUserId(userId);
+        List<Application> applications = applicationService.findApplicationsByStaff(staff);
+        model.addAttribute("applications", applications);
+        return "application-history";
+    }
 
     public long compensationTime(Staff staff){
         ApplicationType applicationTypePlus = applicationService.findApplicationTypeByName("Compensation");
