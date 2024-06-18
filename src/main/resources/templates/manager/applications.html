@@ -68,7 +68,6 @@
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Status</th>
-                <th>Description</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -78,10 +77,9 @@
 			               <td th:text="${#dates.format(app.startTime, 'yyyy-MM-dd')}">Start Date</td>
 			               <td th:text="${#dates.format(app.endTime, 'yyyy-MM-dd')}">End Date</td>
 			               <td th:text="${app.status}">Status</td>
-			               <td th:text="${app.description}">Description</td>
-						   
-			                   <a th:href="@{/manager/application/{userId}/{applicationId}/details(userId=${userId}, applicationId=${app.id})}">View Details</a>
-			                   <form th:action="@{/manager/applications/{id}/approve(id=${app.id})}" method="post">
+						 
+			               <td><a th:href="@{/manager/application/{userId}/{applicationId}/details(userId=${userId}, applicationId=${app.id})}">View Details</a>
+			               <form th:action="@{/manager/applications/{id}/approve(id=${app.id})}" method="post">
 			                       <input type="hidden" name="userId" th:value="${userId}"/>
 			                       <button type="submit">Approve</button>
 			                   </form>
@@ -90,6 +88,7 @@
 			                       <input type="hidden" name="userId" th:value="${userId}"/>
 			                       <button type="submit">Reject</button>
 			                   </form>
+							   </td>
 			               </td>
 			           </tr>
         </tbody>
