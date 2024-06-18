@@ -7,13 +7,13 @@ import jakarta.persistence.Id;
 import java.time.LocalDate;
 
 @Entity
-public class publicHoliday {
+public class PublicHoliday {
     @Id
     private LocalDate date;
     @Column(unique=true, length=50, nullable=false)
     private String holidayName;
 
-    public publicHoliday() {}
+    public PublicHoliday() {}
 
     public LocalDate getDate() {
         return date;

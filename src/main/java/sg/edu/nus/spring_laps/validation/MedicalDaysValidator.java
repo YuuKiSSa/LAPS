@@ -28,7 +28,6 @@ public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLea
         }
         Staff staff = staffService.findByUserId(form.getUserId());
         List<Application> applications = applicationService.findApplicationsByStaffAndYear(staff, form.getStartTime().getYear());
-        System.out.println(applications);
         Duration totalDuration = Duration.ZERO;
         for (Application application : applications) {
             totalDuration = totalDuration.plus(Duration.between(application.getStartTime(), application.getEndTime())).plusHours(16);

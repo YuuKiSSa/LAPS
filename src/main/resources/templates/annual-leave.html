@@ -12,6 +12,8 @@
 <body>
 <h1>Application Form</h1>
 <div class="container">
+    <h3 th:text="'You have ' + ${annualLeaveDays} + ' days annual leave.'">Annual Leave Days</h3>
+    <h3 th:text="'You can apply ' + ${annualLeaveDaysLeft} + ' days annual leave now.'">Annual Leave Days Left</h3>
     <form th:action="@{/staffDashboard/createApplication}" th:object="${applicationForm}" method="post">
         <div>
             <input type="hidden" id="userId" name="userId" th:value="${applicationForm.userId}"/>

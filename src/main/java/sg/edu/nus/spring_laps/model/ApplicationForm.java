@@ -3,6 +3,7 @@ package sg.edu.nus.spring_laps.model;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import sg.edu.nus.spring_laps.validation.ValidAnnualLeave;
 import sg.edu.nus.spring_laps.validation.ValidMedicalLeaveDays;
 import sg.edu.nus.spring_laps.validation.ValidRangeDate;
 import sg.edu.nus.spring_laps.validation.ValidRepeatedDays;
@@ -10,6 +11,7 @@ import sg.edu.nus.spring_laps.validation.ValidRepeatedDays;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+@ValidAnnualLeave
 @ValidRangeDate
 @ValidMedicalLeaveDays
 @ValidRepeatedDays

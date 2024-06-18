@@ -15,4 +15,5 @@ public interface ApplicationService {
     ApplicationType findApplicationTypeById(int applicationTypeId);
     List<Application> findApplicationsByStaffAndYear(Staff staff, int year);
     List<Application> findApplicationsByStaffAndApplicationType(Staff staff, ApplicationType type);
+    List<Application> findAnnualLeaveByStaffAndYear(Staff staff, int year);
 }

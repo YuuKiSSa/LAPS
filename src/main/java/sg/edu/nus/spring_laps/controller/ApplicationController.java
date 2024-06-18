@@ -7,14 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import sg.edu.nus.spring_laps.model.Application;
-import sg.edu.nus.spring_laps.model.ApplicationForm;
-import sg.edu.nus.spring_laps.model.ApplicationType;
-import sg.edu.nus.spring_laps.model.Staff;
+import sg.edu.nus.spring_laps.model.*;
 import sg.edu.nus.spring_laps.service.ApplicationService;
+import sg.edu.nus.spring_laps.service.PublicHolidayService;
 import sg.edu.nus.spring_laps.service.StaffService;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +25,8 @@ public class ApplicationController {
     ApplicationService applicationService;
     @Autowired
     StaffService staffService;
+    @Autowired
+    PublicHolidayService publicHolidayService;
 
     @GetMapping("/createApplication")
     public String createApplication(@RequestParam(value = "type", required = false) int type, Model model, HttpSession session) {
@@ -47,6 +49,11 @@ public class ApplicationController {
             long time = compensationTime(staff);
             model.addAttribute("compensationHours", time);
             model.addAttribute("compensationTimes", time/4);
+        } else if (appTypeName.equals("Annual Leave")) {
+            int annualLeaveDays = staff.getDepartment().getAnnualLeave();
+            model.addAttribute("annualLeaveDays", annualLeaveDays);
+            int annualLeaveDaysLeft = calAnnualLeaveDaysLeft(annualLeaveDays, staff);
+            model.addAttribute("annualLeaveDaysLeft", annualLeaveDaysLeft);
         }
         switch (appTypeName){
             case "Annual Leave": return "annual-leave";
@@ -142,5 +149,34 @@ public class ApplicationController {
             totalDuration = totalDuration.minus(Duration.between(application.getStartTime(), application.getEndTime()));
         }
         return totalDuration.toHours();
+    }
+
+    public boolean isHoliday(LocalDate date){
+        List<LocalDate> publicHolidaysDates = publicHolidayService.findAllPublicHolidays();
+        if (publicHolidaysDates.contains(date) || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY){
+            return true;
+        }
+        return false;
+    }
+
+    public int calAnnualLeaveDaysLeft(int annualLeaveDays, Staff staff){
+        List<Application> applications = applicationService.findAnnualLeaveByStaffAndYear(staff, LocalDateTime.now().getYear());
+        if (annualLeaveDays > 14){
+            for (Application application : applications) {
+                int days = application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;
+                annualLeaveDays-=days;
+            }
+        }else{
+            for (Application application : applications) {
+                int days = application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;
+                for (int i = 0; i < days; i++){
+                    LocalDate date = application.getStartTime().toLocalDate().plusDays(i);
+                    if (!isHoliday(date)){
+                        annualLeaveDays--;
+                    }
+                }
+            }
+        }
+        return annualLeaveDays;
     }
 }

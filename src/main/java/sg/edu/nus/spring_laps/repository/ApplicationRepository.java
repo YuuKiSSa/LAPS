@@ -13,4 +13,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Query("select a from Application a where year(a.startTime) = :year and a.staff = :staff")
     List<Application> findByStaffAndYear(Staff staff, int year);
     List<Application> findByStaffAndApplicationType(Staff staff, ApplicationType type);
+    @Query("select a from Application a where year(a.startTime) = :year and a.staff = :staff and a.applicationType.type = 'Annual Leave'")
+    List<Application> findAnnualLeaveByStaffAndYear(Staff staff, int year);
 }
