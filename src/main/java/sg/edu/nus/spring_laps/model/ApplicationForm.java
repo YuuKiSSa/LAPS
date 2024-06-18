@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @ValidMedicalLeaveDays
 @ValidRepeatedDays
 public class ApplicationForm {
+    private Long applicationId;
     private String userId;
     private String applicationType;
     @NotNull(message = "Start time is required!")
@@ -24,6 +25,14 @@ public class ApplicationForm {
     private LocalDateTime endTime;
     private String selectTime;
     private String reason;
+
+    public Long getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
+    }
 
     public String getUserId() {
         return userId;

@@ -10,6 +10,7 @@ import sg.edu.nus.spring_laps.service.ApplicationService;
 import sg.edu.nus.spring_laps.service.StaffService;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLeaveDays, ApplicationForm> {
     @Autowired
@@ -29,6 +30,9 @@ public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLea
         List<Application> applications = applicationService.findMedicalLeaveByStaffAndYear(staff, form.getStartTime().getYear());
         int medicalLeaveDays = 0;
         for (Application application : applications) {
+            if (Objects.equals(application.getId(), form.getApplicationId())) {
+                continue;
+            }
             medicalLeaveDays += application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;
         }
         int medicalLeaveDaysNow = form.getEndTime().getDayOfYear() - form.getStartTime().getDayOfYear() + 1;

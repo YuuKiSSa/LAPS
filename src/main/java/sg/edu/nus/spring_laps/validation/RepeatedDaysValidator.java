@@ -10,6 +10,7 @@ import sg.edu.nus.spring_laps.service.ApplicationService;
 import sg.edu.nus.spring_laps.service.StaffService;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RepeatedDaysValidator implements ConstraintValidator<ValidRepeatedDays, ApplicationForm> {
     @Autowired
@@ -26,9 +27,11 @@ public class RepeatedDaysValidator implements ConstraintValidator<ValidRepeatedD
         Staff staff = staffService.findByUserId(form.getUserId());
         List<Application> applications = applicationService.findApplicationsByStaff(staff);
         for (Application application : applications) {
+            if (Objects.equals(application.getId(), form.getApplicationId())) {
+                continue;
+            }
             if ((form.getStartTime().isAfter(application.getStartTime())&&form.getStartTime().isBefore(application.getEndTime()))||
-                    (form.getEndTime().isAfter(application.getStartTime()) && form.getEndTime().isBefore(application.getEndTime()))||
-                    (form.getStartTime().getDayOfYear() == application.getStartTime().getDayOfYear() )) {
+                    (form.getEndTime().isAfter(application.getStartTime()) && form.getEndTime().isBefore(application.getEndTime()))) {
                 return false;
             }
         }

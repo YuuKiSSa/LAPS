@@ -13,10 +13,12 @@
 <h1>Application Form</h1>
 <input type="hidden" id="compensationHours" th:value="${compensationHours}" />
     <div class="container">
+        <h2 th:text="${applicationId == null ? 'Create Application' : 'Edit Application'}"></h2>
         <h3 th:text="'You have ' + ${compensationHours} + ' hours compensated.'">CompensationHours</h3>
         <h3 th:text="'You can apply ' + ${compensationTimes} + ' times compensation leave.'">CompensationTimes</h3>
-        <form th:action="@{/staffDashboard/createApplication}" th:object="${applicationForm}" method="post">
+        <form id="applicationForm" th:object="${applicationForm}" method="post">
             <div>
+                <input type="hidden" id="applicationId" th:value="${applicationForm.applicationId}"/>
                 <input type="hidden" id="userId" name="userId" th:value="${applicationForm.userId}"/>
             </div>
             <div>
@@ -26,12 +28,12 @@
             <div id="annualLeaveDays"></div>
             <div>
                 <label for="startTime">Start Date:</label>
-                <input type="text" id="startTime" name="startTime" />
+                <input type="text" id="startTime" name="startTime" th:value="${applicationForm.startTime}"/>
                 <div th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="error"></div>
             </div>
             <div>
                 <label for="endTime">End Date:</label>
-                <input type="text" id="endTime" name="endTime" />
+                <input type="text" id="endTime" name="endTime" th:value="${applicationForm.endTime}"/>
                 <div th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="error"></div>
             </div>
             <div id="select">

@@ -15,6 +15,7 @@ import sg.edu.nus.spring_laps.service.StaffService;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 public class AnnualLeaveValidator implements ConstraintValidator<ValidAnnualLeave, ApplicationForm> {
     @Autowired
@@ -42,12 +43,18 @@ public class AnnualLeaveValidator implements ConstraintValidator<ValidAnnualLeav
         }
         if (annualLeaveDays > 14){
             for (Application application : applications) {
+                if (Objects.equals(application.getId(), form.getApplicationId())) {
+                    continue;
+                }
                 int days = application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;
                 annualLeaveDays -= days;
             }
             annualLeaveDays -= form.getEndTime().getDayOfYear() - form.getStartTime().getDayOfYear() + 1;
         }else {
             for (Application application : applications) {
+                if (Objects.equals(application.getId(), form.getApplicationId())) {
+                    continue;
+                }
                 int days = application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;
                 for (int i = 0; i < days; i++) {
                     LocalDate date = application.getStartTime().toLocalDate().plusDays(i);

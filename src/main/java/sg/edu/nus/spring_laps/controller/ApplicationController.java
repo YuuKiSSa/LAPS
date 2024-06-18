@@ -69,7 +69,6 @@ public class ApplicationController {
                                     BindingResult bindingResult,Model model,
                                     HttpSession session) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("applicationTypes", applicationService.findAllApplicationTypes());
             model.addAttribute("fieldErrors", bindingResult.getFieldErrors());
             model.addAttribute("globalErrors", bindingResult.getGlobalErrors());
             switch (applicationForm.getApplicationType()) {
@@ -138,13 +137,97 @@ public class ApplicationController {
     }
 
     @GetMapping("/editApplication")
-    public String editApplication(@RequestParam("applicationId") Long applicationId, HttpSession session, Model model) {
+    public String editApplication(@RequestParam(value = "applicationId") Long applicationId, HttpSession session, Model model) {
         Application application = applicationService.findApplicationById(applicationId);
         if (application == null) {
             return "application-error";
         }
+        model.addAttribute("applicationId", applicationId);
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return "/login";
+        }
+        Staff staff = staffService.findByUserId(userId);
 
-        return "edit-application";
+        ApplicationForm applicationForm = new ApplicationForm();
+        applicationForm.setApplicationId(applicationId);
+        applicationForm.setUserId(session.getAttribute("userId").toString());
+        String appTypeName = application.getApplicationType().getType();
+        applicationForm.setApplicationType(appTypeName);
+        applicationForm.setStartTime(application.getStartTime());
+        applicationForm.setEndTime(application.getEndTime());
+        model.addAttribute("applicationForm", applicationForm);
+
+        if (appTypeName.equals("Compensation Leave")){
+            long time = compensationTime(staff);
+            model.addAttribute("compensationHours", time);
+            model.addAttribute("compensationTimes", time/4);
+        } else if (appTypeName.equals("Annual Leave")) {
+            int annualLeaveDays = staff.getDepartment().getAnnualLeave();
+            model.addAttribute("annualLeaveDays", annualLeaveDays);
+            int annualLeaveDaysLeft = calAnnualLeaveDaysLeft(annualLeaveDays, staff);
+            model.addAttribute("annualLeaveDaysLeft", annualLeaveDaysLeft);
+        }
+
+        switch (application.getApplicationType().getType()){
+            case "Annual Leave": return "annual-leave";
+            case "Medical Leave": return  "medical-leave";
+            case "Compensation Leave": return  "compensation-leave";
+            case "Compensation": return  "compensation";
+            default: return "create-application";
+        }
+    }
+
+    @PostMapping("/editApplication")
+    public String editApplication(@Valid @ModelAttribute("applicationForm") ApplicationForm applicationForm,
+                                  BindingResult bindingResult, Model model, HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("fieldErrors", bindingResult.getFieldErrors());
+            model.addAttribute("globalErrors", bindingResult.getGlobalErrors());
+            switch (applicationForm.getApplicationType()) {
+                case "Annual Leave":
+                    return "annual-leave";
+                case "Medical Leave":
+                    return "medical-leave";
+                case "Compensation Leave":
+                    return "compensation-leave";
+                case "Compensation":
+                    return "compensation";
+                default:
+                    return "create-application";
+            }
+        }
+
+        Long applicationId = applicationForm.getApplicationId();
+        Application savedApplication = applicationService.findApplicationById(applicationId);
+        if (savedApplication == null) {
+            return "application-error";
+        }
+        savedApplication.setStatus("Updated");
+        String selectTime = applicationForm.getSelectTime();
+        LocalDateTime startTime = applicationForm.getStartTime();
+        LocalDateTime endTime = applicationForm.getEndTime();
+        if(!applicationForm.getApplicationType().equals("Compensation")){
+            if(selectTime != null){
+                if (selectTime.equals("Morning")) {
+                    savedApplication.setStartTime(startTime.plusHours(9));
+                    savedApplication.setEndTime(endTime.plusHours(13));
+                }else{
+                    savedApplication.setStartTime(startTime.plusHours(13));
+                    savedApplication.setEndTime(endTime.plusHours(17));
+                }
+            }else{
+                savedApplication.setStartTime(startTime.plusHours(9));
+                savedApplication.setEndTime(endTime.plusHours(17));
+            }
+        }else{
+            savedApplication.setStartTime(startTime);
+            savedApplication.setEndTime(endTime);
+        }
+        savedApplication.setDescription(applicationForm.getReason());
+        Application newApplication = applicationService.saveApplication(savedApplication);
+        session.setAttribute("applicationId", newApplication.getId());
+        return "redirect:/staffDashboard/displayApplication";
     }
 
     @GetMapping("/history")

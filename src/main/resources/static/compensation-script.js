@@ -8,3 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
         enableTime: true
     });
 });
+$(document).ready(function(){
+    document.addEventListener("DOMContentLoaded", function() {
+        var applicationForm = document.getElementById("applicationForm");
+        var applicationId = document.getElementById("applicationId");
+
+        if (applicationId === null) {
+            applicationForm.action = "/staffDashboard/createApplication";
+        } else {
+            applicationForm.action = "/staffDashboard/editApplication";
+        }
+    });
+});
