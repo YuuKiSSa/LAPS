@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Staff/Manager</title>
+	<script src="/search-result.js"></script>
+</head>
+<body>
+    <h1>Search Staff/Manager</h1>
+    <form action="#" th:action="@{/admin/search/searching}" method="post">
+        <label for="query">Search:</label>
+        <input type="text" id="query" name="query" th:value="${query}"><br>
+        <input type="submit" value="search">
+    </form>
+
+    <!-- 检查是否有搜索结果 -->
+    <div th:if="${staff != null}">
+        <table>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Hierarchy</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+            <!-- 使用Thymeleaf语法遍历展示员工信息 -->
+            <tr th:each="staff : ${staff}">
+                <form th:action="@{/admin/department/edit}" method="post">
+                    <td>
+                       <input type="text" name="userId" id="userId" th:value="${staff.userId}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="name" th:value="${staff.name}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="email" th:value="${staff.email}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="hierarchy" th:value="${staff.hierarchy}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="department.name" th:value="${staff.department.name}" readonly>
+                    </td>
+                    <td>
+                        <button type="button" onclick="enableEdit(this)">Edit</button>
+                        <button type="submit">Save</button>
+                    </td>
+                </form>
+				<td>
+				       <form th:action="@{/admin/search/searching/delete}" method="post">
+				       <input type="hidden" name="userId" th:value="${staff.userId}">
+				       <button type="submit">Delete</button>
+				       </form>
+				</td>
+            </tr>
+			
+        </table>
+    </div>
+	<a href="/admin">
+	  <button>Back to the dashboard</button>
+	</a>
+</body>
+</html>

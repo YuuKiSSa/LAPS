@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>部门信息</title>
+</head>
+<body>
+  <h1>The information of department</h1>
+
+  <table>
+    <tr>
+      <th>Department ID</th>
+      <th>Department name</th>
+      <th>Annual date</th>
+      <th>Operation</th>
+    </tr>
+    <!-- 使用 Thymeleaf 遍历部门列表 -->
+    <tr th:each="dept : ${department}">
+      <td>
+        <!-- 添加超链接，点击部门ID跳转到指定链接 -->
+        <a th:href="@{/admin/department/search(departmentId=${dept.id})}" th:text="${dept.id}"></a>
+      </td>
+      <td th:text="${dept.name}"></td>
+      <td>
+        <!-- 使用表单包裹输入字段和按钮 -->
+        <form th:action="@{/admin/department/date}" method="post">
+          <!-- 隐藏字段，包含 department ID 和 name -->
+          <input type="hidden" name="id" th:value="${dept.id}">
+          <input type="hidden" name="name" th:value="${dept.name}">
+          <!-- 可编辑的年假字段 -->
+          <input type="text" name="annualLeave" th:value="${dept.annualLeave}" readonly>
+          <button type="button" onclick="enableEdit(this)">Edit</button>
+          <button type="submit">Save</button>
+        </form>
+      </td>
+    </tr>
+  </table>
+
+  <script>
+    function enableEdit(button) {
+      // 获取当前行的输入字段
+      var inputField = button.parentNode.querySelector('input[name=annualLeave]');
+      // 移除只读属性，允许编辑
+      inputField.removeAttribute('readonly');
+    }
+  </script>
+  <a href="/admin">
+    <button>Back to the dashboard</button>
+  </a>
+</body>
+</html>
