@@ -31,11 +31,16 @@
             <span th:text="${#temporals.format(displayApplication.endTime, 'yyyy-MM-dd HH:mm')}"></span>
         </div>
         <div class="detail">
+            <label class="label">Status:</label>
+            <span id="status" th:text="${displayApplication.status}"></span>
+        </div>
+        <div class="detail">
             <label class="label">Reason:</label>
             <span th:text="${displayApplication.description}"></span>
         </div>
-        <button type="button" id="backButton" onclick="window.history.back()">Back</button>
+        <button type="button" id="backButton" onclick="window.location.href='/staffDashboard'">Back</button>
         <button type="button" id="editButton">Edit</button>
+        <button type="button" id="cancelButton">Cancel</button>
     </div>
 </div>
 </body>

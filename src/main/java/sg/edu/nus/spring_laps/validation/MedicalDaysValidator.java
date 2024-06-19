@@ -30,7 +30,8 @@ public class MedicalDaysValidator implements ConstraintValidator<ValidMedicalLea
         List<Application> applications = applicationService.findMedicalLeaveByStaffAndYear(staff, form.getStartTime().getYear());
         int medicalLeaveDays = 0;
         for (Application application : applications) {
-            if (Objects.equals(application.getId(), form.getApplicationId())) {
+            if (Objects.equals(application.getId(), form.getApplicationId()) || application.getStatus().equals("Rejected") ||
+                    application.getStatus().equals("Deleted") || application.getStatus().equals("Cancel")) {
                 continue;
             }
             medicalLeaveDays += application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;

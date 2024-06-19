@@ -27,7 +27,8 @@ public class RepeatedDaysValidator implements ConstraintValidator<ValidRepeatedD
         Staff staff = staffService.findByUserId(form.getUserId());
         List<Application> applications = applicationService.findApplicationsByStaff(staff);
         for (Application application : applications) {
-            if (Objects.equals(application.getId(), form.getApplicationId())) {
+            if (Objects.equals(application.getId(), form.getApplicationId()) || application.getStatus().equals("Rejected") ||
+                    application.getStatus().equals("Deleted") || application.getStatus().equals("Cancel")) {
                 continue;
             }
             if ((form.getStartTime().isAfter(application.getStartTime())&&form.getStartTime().isBefore(application.getEndTime()))||

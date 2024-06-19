@@ -43,7 +43,8 @@ public class AnnualLeaveValidator implements ConstraintValidator<ValidAnnualLeav
         }
         if (annualLeaveDays > 14){
             for (Application application : applications) {
-                if (Objects.equals(application.getId(), form.getApplicationId())) {
+                if (Objects.equals(application.getId(), form.getApplicationId()) || application.getStatus().equals("Rejected") ||
+                        application.getStatus().equals("Deleted") || application.getStatus().equals("Cancel")) {
                     continue;
                 }
                 int days = application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;
@@ -52,7 +53,8 @@ public class AnnualLeaveValidator implements ConstraintValidator<ValidAnnualLeav
             annualLeaveDays -= form.getEndTime().getDayOfYear() - form.getStartTime().getDayOfYear() + 1;
         }else {
             for (Application application : applications) {
-                if (Objects.equals(application.getId(), form.getApplicationId())) {
+                if (Objects.equals(application.getId(), form.getApplicationId()) || application.getStatus().equals("Rejected") ||
+                        application.getStatus().equals("Deleted") || application.getStatus().equals("Cancel")) {
                     continue;
                 }
                 int days = application.getEndTime().getDayOfYear() - application.getStartTime().getDayOfYear() + 1;

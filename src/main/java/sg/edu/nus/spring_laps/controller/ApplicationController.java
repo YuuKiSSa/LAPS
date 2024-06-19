@@ -242,6 +242,29 @@ public class ApplicationController {
         return "application-history";
     }
 
+    @GetMapping("/cancelApplication")
+    public String cancelApplication(@RequestParam("applicationId") Long applicationId, HttpSession session, Model model) {
+        if (applicationId == null) {
+            return "application-error";
+        }
+        if (session.getAttribute("userId") == null) {
+            return "/login";
+        }
+        Application application = applicationService.findApplicationById(applicationId);
+        if (application == null) {
+            return "application-error";
+        }
+        String status = application.getStatus();
+        if (status.equals("Approved")) {
+            application.setStatus("Cancel");
+        }else{
+            application.setStatus("Deleted");
+        }
+        applicationService.saveApplication(application);
+        session.setAttribute("applicationId", applicationId);
+        return "redirect:/staffDashboard/displayApplication";
+    }
+
     public long compensationTime(Staff staff){
         ApplicationType applicationTypePlus = applicationService.findApplicationTypeByName("Compensation");
         ApplicationType applicationTypeSub = applicationService.findApplicationTypeByName("Compensation Leave");
