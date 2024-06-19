@@ -1,6 +1,8 @@
 package sg.edu.nus.spring_laps.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sg.edu.nus.spring_laps.model.Application;
@@ -60,6 +62,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public List<Application> findAnnualLeaveByStaffAndYear(Staff staff, int year){
         return applicationRepository.findAnnualLeaveByStaffAndYear(staff, year);
+    }
+    @Override
+    public Page<Application> findAllByStaff(Staff staff, Pageable pageable) {
+        return applicationRepository.findAllByStaff(staff, pageable);
     }
 
 }

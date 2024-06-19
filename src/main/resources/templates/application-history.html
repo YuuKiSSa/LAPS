@@ -40,6 +40,19 @@
         </tr>
         </tbody>
     </table>
+
+    <div class="pagination">
+        <span th:if="${currentPage > 0}">
+            <a th:href="@{/staffDashboard/history(page=${currentPage - 1}, size=10)}">&laquo; Previous</a>
+        </span>
+        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+            <a th:if="${i != currentPage + 1}" th:href="@{/staffDashboard/history(page=${i - 1}, size=10)}" th:text="${i}"></a>
+            <span th:if="${i == currentPage + 1}" th:text="${i}"></span>
+        </span>
+        <span th:if="${currentPage < totalPages - 1}">
+            <a th:href="@{/staffDashboard/history(page=${currentPage + 1}, size=10)}">Next &raquo;</a>
+        </span>
+    </div>
 </div>
 </body>
 </html>
