@@ -1,98 +1,95 @@
 package sg.edu.nus.spring_laps.model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 public class Application {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	  @Id
+	  @GeneratedValue(strategy = GenerationType.IDENTITY)
+	  private Long id;
+	  private LocalDateTime startTime;
+	  private LocalDateTime endTime;
+	  @Column(length = 10)
+	  private String status;
+	  @Column(length = 1000)
+	  private String description;
+	  @ManyToOne
+	  @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "user_id"))
+	  private Staff staff;
+	  @ManyToOne
+	  @JoinColumn(name = "type_id", nullable = false, foreignKey = @ForeignKey(name = "type_id"))
+	  private ApplicationType applicationType;
+	  public Application() {}
 
-    @Column(length = 20,name="type")
-    private String applicationtype;
+	    public Long getId() {
+	        return this.id;
+	    }
 
-    private Date startTime;
-    private Date endTime;
+	    public void setId(Long id) {
+	        this.id = id;
+	    }
 
-    @Column(length = 10)
-    private String status;
+	    public LocalDateTime getStartTime() {
+	        return startTime;
+	    }
 
-    @ManyToOne(fetch = FetchType.EAGER) // 设置为急加载
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "user_id"))
-    private Staff staff;
-    
-    @Column(length = 1000)
-    private String description;
+	    public void setStartTime(LocalDateTime startTime) {
+	        this.startTime = startTime;
+	    }
 
-    public Application() {}
+	    public LocalDateTime getEndTime() {
+	        return endTime;
+	    }
 
-    public Long getId() {
-        return this.id;
-    }
+	    public void setEndTime(LocalDateTime endTime) {
+	        this.endTime = endTime;
+	    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	    public String getStatus() {
+	        return this.status;
+	    }
 
-    public String getApplicationtype() {
-        return this.applicationtype;
-    }
+	    public void setStatus(String status) {
+	        this.status = status;
+	    }
 
-    public void setApplicationtype(String applicationtype) {
-        this.applicationtype = applicationtype;
-    }
+	    public String getDescription() {
+	        return description;
+	    }
 
-    public Date getStartTime() {
-        return this.startTime;
-    }
+	    public void setDescription(String description) {
+	        this.description = description;
+	    }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
+	    public Staff getStaff() {
+	        return this.staff;
+	    }
 
-    public Date getEndTime() {
-        return this.endTime;
-    }
+	    public void setStaff(Staff staff) {
+	        this.staff = staff;
+	    }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
+	    public ApplicationType getApplicationType() {
+	        return applicationType;
+	    }
 
-    public String getStatus() {
-        return this.status;
-    }
+	    public void setApplicationType(ApplicationType applicationType) {
+	        this.applicationType = applicationType;
+	    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Staff getStaff() {
-        return this.staff;
-    }
-
-    public void setStaff(Staff staff) {
-        this.staff = staff;
-    }
-    
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Application{" +
-                "id=" + id +
-                ", type='" + applicationtype + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", status='" + status + '\'' +
-                ", staff=" + staff +
-                ", description='" + description + '\'' +
-                '}';
-    }
+	    @Override
+	    public String toString() {
+	        return "Application{" +
+	                "id=" + id +
+	                ", startTime=" + startTime +
+	                ", endTime=" + endTime +
+	                ", status='" + status + '\'' +
+	                ", description='" + description + '\'' +
+	                ", staff=" + staff.getName() +
+	                ", applicationType=" + applicationType.getType() +
+	                '}';
+	    }
 }

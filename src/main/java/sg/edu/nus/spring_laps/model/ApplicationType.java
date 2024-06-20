@@ -1,5 +1,7 @@
 package sg.edu.nus.spring_laps.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +10,9 @@ public class ApplicationType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(length = 20)
-    private String applicationtype;
+    private String type;
+    @OneToMany(mappedBy = "applicationType")
+    private List<Application> applications;
 
     public ApplicationType() {}
 
@@ -21,18 +25,19 @@ public class ApplicationType {
     }
 
     public String getType() {
-        return this.applicationtype;
+        return this.type;
     }
 
     public void setType(String type) {
-        this.applicationtype = type;
+        this.type = type;
     }
 
     @Override
     public String toString() {
         return "ApplicationType{" +
                 "id=" + id +
-                ", type='" + applicationtype + '\'' +
+                ", type='" + type + '\'' +
+                ", applications=" + applications +
                 '}';
     }
 }

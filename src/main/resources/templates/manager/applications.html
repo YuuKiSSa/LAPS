@@ -42,8 +42,8 @@
 	        <input type="date" id="startTime" name="startTime" required>
 	        <label for="endTime">End Time:</label>
 	        <input type="date" id="endTime" name="endTime" required>
-	        <label for="applicationtype">Type:</label>
-	        <select id="applicationtype" name="applicationtype">
+	        <label for="applicationType">Type:</label>
+	        <select id="applicationType" name="applicationType">
 	            <option value="annual">Annual</option>
 	            <option value="compensation">Compensation</option>
 	            <option value="medical">Medical</option>
@@ -73,9 +73,9 @@
         </thead>
         <tbody>
 			<tr th:each="app : ${entry.value}" >
-			               <td th:text="${app.applicationtype}">Leave Type</td>
-			               <td th:text="${#dates.format(app.startTime, 'yyyy-MM-dd')}">Start Date</td>
-			               <td th:text="${#dates.format(app.endTime, 'yyyy-MM-dd')}">End Date</td>
+						   <td th:text="${app.applicationType.type}">Leave Type</td>
+						   <td th:text="${#temporals.format(app.startTime, 'yyyy-MM-dd')}">Start Date</td>
+						   <td th:text="${#temporals.format(app.endTime, 'yyyy-MM-dd')}">End Date</td>
 			               <td th:text="${app.status}">Status</td>
 						 
 			               <td><a th:href="@{/manager/application/{userId}/{applicationId}/details(userId=${userId}, applicationId=${app.id})}">View Details</a>

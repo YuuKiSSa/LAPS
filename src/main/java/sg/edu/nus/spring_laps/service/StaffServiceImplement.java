@@ -17,7 +17,7 @@ public class StaffServiceImplement implements StaffService{
     public Staff findByUserId(String userId) {
         return staffRepository.findByUserId(userId);
     }
-	public List<Staff> getSubordinates(int managerHierarchy) {
-        return staffRepository.findByHierarchyLessThan(managerHierarchy);
+	public List<Staff> getSubordinates(int departmentId,int managerHierarchy) {
+        return staffRepository.findByDepartmentIdAndHierarchyLessThan(departmentId,managerHierarchy);
     }
 }

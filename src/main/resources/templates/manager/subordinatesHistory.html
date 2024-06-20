@@ -49,9 +49,9 @@
     <tbody>
         <tr th:each="app : ${applications}">
             <td th:text="${app.staff.name}"></td>
-            <td th:text="${app.applicationtype}"></td>
-            <td th:text="${#dates.format(app.startTime, 'yyyy-MM-dd')}"></td>
-            <td th:text="${#dates.format(app.endTime, 'yyyy-MM-dd')}"></td>
+            <td th:text="${app.applicationType.type}"></td>
+            <td th:text="${#temporals.format(app.startTime, 'yyyy-MM-dd')}"></td>
+            <td th:text="${#temporals.format(app.startTime, 'yyyy-MM-dd')}"></td>
             <td th:text="${app.status}"></td>
             <td th:text="${app.description}"></td>
         </tr>

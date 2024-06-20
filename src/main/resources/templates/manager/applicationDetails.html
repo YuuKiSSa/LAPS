@@ -7,9 +7,9 @@
     <h1>Application Details</h1>
     <div>
 		<p>Name: <span th:text="${applicationOpt.isPresent() ? applicationOpt.get().staff.name : ''}"></span></p>
-		<p>Leave Type: <span th:text="${applicationOpt.isPresent() ? applicationOpt.get().applicationtype : ''}"></span></p>
-		<p>Start Date:  <span th:text="${applicationOpt.isPresent() ? #dates.format(applicationOpt.get().startTime, 'yyyy-MM-dd') : ''}"></span></p>
-		<p>End Date: <span th:text="${applicationOpt.isPresent() ? #dates.format(applicationOpt.get().endTime, 'yyyy-MM-dd') : ''}"></span></p>
+		<p>Leave Type: <span th:text="${applicationOpt.isPresent() ? applicationOpt.get().applicationType.type : ''}"></span></p>
+		<p>Start Date:  <span th:text="${applicationOpt.isPresent() ? #temporals.format(applicationOpt.get().startTime, 'yyyy-MM-dd') : ''}"></span></p>
+		<p>End Date: <span th:text="${applicationOpt.isPresent() ? #temporals.format(applicationOpt.get().endTime, 'yyyy-MM-dd')  : ''}"></span></p>
 		<p>Reason: <span th:text="${applicationOpt.isPresent() ? applicationOpt.get().description : ''}"></span></p>
 		<p>Status:<span th:text="${applicationOpt.isPresent() ? applicationOpt.get().status : ''}"></span></p>
 

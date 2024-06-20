@@ -7,25 +7,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import sg.edu.nus.spring_laps.model.Application;
-import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.repository.ApplicationRepository;
 @Service
 public class ReportServiceImpl implements ReportService{
 	 @Autowired
 	 private ApplicationRepository applicationRepository;
 	 
-	 public List<Application> getApplicationsByPeriodAndType(Date startTime, Date endTime, String applicationtype) {
-	        if (applicationtype.equals("all")) {
+	 public List<Application> getApplicationsByPeriodAndType(Date startTime, Date endTime, String type) {
+	        if (type.equals("all")) {
 	            return applicationRepository.findByStartTimeBetween(startTime, endTime);
 	        }
-	        return applicationRepository.findByStartTimeBetweenAndApplicationtype(startTime, endTime, applicationtype);
+	        return applicationRepository.findByStartTimeBetweenAndApplicationType_Type(startTime, endTime, type);
 	    }
 
-	    public List<Application> getCompensationClaimsByStaff(Staff staff) {
-	        return applicationRepository.findByStaffAndApplicationtype(staff, "compensation");
+	    public List<Application> getCompensationClaimsByStaffUserId(String userId) {
+	        return applicationRepository.findByStaffUserIdAndApplicationType_Type(userId, "compensation");
 	    }
 
 	    public List<Application> getAllCompensationClaims() {
-	        return applicationRepository.findByApplicationtype("compensation");
+	        return applicationRepository.findByApplicationType_Type("compensation");
 	    }
 }

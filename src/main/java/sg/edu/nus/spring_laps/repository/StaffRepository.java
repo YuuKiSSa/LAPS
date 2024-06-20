@@ -10,5 +10,5 @@ public interface StaffRepository extends JpaRepository<Staff, String> {
     Staff findByEmail(String email);
     Staff findByName(String name);
 	Staff findByUserId(String userId);
-	List<Staff> findByHierarchyLessThan(int hierarchy);
+	List<Staff> findByDepartmentIdAndHierarchyLessThan(int departmentId,int hierarchy);
 }

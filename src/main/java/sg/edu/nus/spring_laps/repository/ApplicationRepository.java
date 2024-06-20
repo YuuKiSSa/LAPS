@@ -16,10 +16,10 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 	
 	List<Application> findByStartTimeBetween(Date startTime, Date endTime);
 
-    List<Application> findByStartTimeBetweenAndApplicationtype(Date startTime, Date endTime, String applicationtype);
+    List<Application> findByStartTimeBetweenAndApplicationType_Type(Date startTime, Date endTime, String type);
 
-    List<Application> findByStaffAndApplicationtype(Staff staff, String type);
+    List<Application> findByStaffUserIdAndApplicationType_Type(String userId, String type);
 
-    List<Application> findByApplicationtype(String applicationtype);
+    List<Application> findByApplicationType_Type(String type);
 
 }

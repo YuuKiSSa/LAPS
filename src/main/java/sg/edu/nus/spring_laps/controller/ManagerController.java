@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import sg.edu.nus.spring_laps.model.Application;
 import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.ApplicationService;
+import sg.edu.nus.spring_laps.service.EmailService;
 import sg.edu.nus.spring_laps.service.ReportService;
 import sg.edu.nus.spring_laps.service.StaffService;
 import sg.edu.nus.spring_laps.repository.StaffRepository;
@@ -36,7 +37,8 @@ public class ManagerController {
     private ApplicationService applicationService;
     @Autowired
     private ReportService reportService;
-
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private StaffRepository staffRepository;
     @Autowired
@@ -81,7 +83,7 @@ public class ManagerController {
     @GetMapping("/subordinates/{userId}/history")
     public String viewSubordinatesHistory(@PathVariable String userId, Model model) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
-        List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy());
+        List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy(),manager.getDepartment().getId());
         List<Application> applications = applicationService.getApplicationsForSubordinates(subordinates);
         model.addAttribute("applications", applications);
         model.addAttribute("userId", userId);
@@ -92,13 +94,20 @@ public class ManagerController {
     @PostMapping("/applications/{id}/approve")
     public String approveApplication(@PathVariable Long id, @RequestParam String userId) {
         applicationService.approveApplication(id);
+        Application application = applicationService.findById(id).orElseThrow();
+        String loginLink = "http://localhost:8080/login";  // 替换为你的实际登录页面URL
+        String emailContent = "Your leave application has been approved. You can view the details and comments by logging in here: " + loginLink;
+        emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Approved", emailContent);
         return "redirect:/manager/applications/" + userId;
     }
-
 
     @PostMapping("/applications/{id}/reject")
     public String rejectApplication(@PathVariable Long id, @RequestParam String comment, @RequestParam String userId) {
         applicationService.rejectApplication(id, comment);
+        Application application = applicationService.findById(id).orElseThrow();
+        String loginLink = "http://localhost:8080/login";  // 替换为你的实际登录页面URL
+        String emailContent = "Your leave application has been rejected. Comment: " + comment + ". You can view the details and comments by logging in here: " + loginLink;
+        emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Rejected", emailContent);
         return "redirect:/manager/applications/" + userId;
     }
     
@@ -116,9 +125,9 @@ public class ManagerController {
     }
 
     @GetMapping("/report/compensation")
-    public ResponseEntity<byte[]> getCompensationReport(@RequestParam(required = false) Staff staff) {
-        List<Application> applications = (staff != null)
-                ? reportService.getCompensationClaimsByStaff(staff)
+    public ResponseEntity<byte[]> getCompensationReport(@RequestParam(required = false) String userId) {
+        List<Application> applications = (userId != null)
+                ? reportService.getCompensationClaimsByStaffUserId(userId)
                 : reportService.getAllCompensationClaims();
         String csvContent = generateCSV(applications);
 
@@ -128,15 +137,17 @@ public class ManagerController {
                 .body(csvContent.getBytes(StandardCharsets.UTF_8));
     }
 
-    private String generateCSV(List<Application> applications) {
+    public String generateCSV(List<Application> applications) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
             writer.write("ID,userID,applicationType,Start Time,End Time,Status\n");
             for (Application application : applications) {
-                writer.write(String.format("%d,%d,%s,%s,%s,%s\n",
+            	 String userId = (application.getStaff() != null) ? application.getStaff().getUserId().toString() : "N/A";
+            	 String type = application.getApplicationType().getType();
+                writer.write(String.format("%d,%s,%s,%s,%s,%s\n",
                         application.getId(),
-                        application.getStaff(),
-                        application.getApplicationtype(),
+                        userId,
+                        type,
                         application.getStartTime().toString(),
                         application.getEndTime().toString(),
                         application.getStatus()));
