@@ -23,4 +23,10 @@ public interface ApplicationService {
     List<Application> getApplicationsForSubordinates(List<Staff> subordinates);
     void approveApplication(Long applicationId);
     void rejectApplication(Long applicationId, String comment);
+    Application findApplicationById(String query);
+    List<Application> findApplicationByUserId(String query);
+    List<Application> findApplicationByName(String query);
+    List<Application> findAllApplication();
+    List<Application> getAllApplications();
+    void updateApplication(Application application);
 }

@@ -17,7 +17,7 @@ public class PublicHolidayServiceImpl implements PublicHolidayService {
     private PublicHolidayRepository publicHolidayRepository;
 
     @Override
-    public List<LocalDate> findAllPublicHolidays() {
+    public List<LocalDate> findAllPublicHolidaysDate() {
         List<PublicHoliday> publicHolidays =  publicHolidayRepository.findAll();
         List<LocalDate> publicHolidayDates = new ArrayList<LocalDate>();
         for (PublicHoliday publicHoliday : publicHolidays) {
@@ -26,4 +26,14 @@ public class PublicHolidayServiceImpl implements PublicHolidayService {
         return publicHolidayDates;
     }
 
+    @Override
+    public List<PublicHoliday> findAllHoliday() {
+        // TODO Auto-generated method stub
+        return publicHolidayRepository.findAll();
+    }
+    @Override
+    public void saveHoliday(PublicHoliday publicHoliday) {
+        // TODO Auto-generated method stub
+        publicHolidayRepository.save(publicHoliday);
+    }
 }

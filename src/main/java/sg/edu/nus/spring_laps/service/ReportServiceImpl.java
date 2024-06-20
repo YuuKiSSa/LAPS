@@ -3,10 +3,8 @@ package sg.edu.nus.spring_laps.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sg.edu.nus.spring_laps.model.Application;
-import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.repository.ApplicationRepository;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class ReportServiceImpl implements ReportService{
     }
 
     public List<Application> getCompensationClaimsByStaffUserId(String userId) {
-        return applicationRepository.findByStaffUserIdAndApplicationType_Type(userId, "Compensation");
+        return applicationRepository.findByStaffUserIdAndApplicationType(userId, "Compensation");
     }
 
     public List<Application> getAllCompensationClaims() {

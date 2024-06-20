@@ -5,4 +5,5 @@ import sg.edu.nus.spring_laps.model.Admin;
 
 public interface AdminRepository extends JpaRepository<Admin, String> {
     Admin findByUserIdAndPassword(String userId, String password);
+
 }

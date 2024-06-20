@@ -48,7 +48,10 @@ public class ManagerController {
     public String viewApplications(@PathVariable String userId, Model model) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
         List<Application> applications = applicationService.getApplicationsForManager(manager.getHierarchy(), manager.getDepartment().getId());
-        Map<Staff, List<Application>> applicationsByStaff = applications.stream().collect(Collectors.groupingBy(Application::getStaff));
+        List<Application> filteredApplications = applications.stream()
+                .filter(application -> "Applied".equals(application.getStatus())|| "Updated".equals(application.getStatus()))
+                .toList();
+        Map<Staff, List<Application>> applicationsByStaff = filteredApplications.stream().collect(Collectors.groupingBy(Application::getStaff));
         model.addAttribute("applicationsByStaff", applicationsByStaff);
         model.addAttribute("userId", userId);  // 传递 userId 以便在重定向时使用
         return "manager/manager-applications";
@@ -88,7 +91,7 @@ public class ManagerController {
     public String rejectApplication(@PathVariable Long id, @RequestParam String comment, @RequestParam String userId) {
         applicationService.rejectApplication(id, comment);
         Application application = applicationService.findApplicationById(id);
-        String loginLink = "http://localhost:8080/login";  // 替换为你的实际登录页面URL
+        String loginLink = "http://localhost:8080/login";
         String emailContent = "Your leave application has been rejected. Comment: " + comment + ". You can view the details and comments by logging in here: " + loginLink;
         emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Rejected", emailContent);
         return "redirect:/manager/applications/" + userId;

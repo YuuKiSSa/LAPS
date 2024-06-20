@@ -3,10 +3,8 @@ package sg.edu.nus.spring_laps.validation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import sg.edu.nus.spring_laps.controller.ApplicationController;
 import sg.edu.nus.spring_laps.model.Application;
 import sg.edu.nus.spring_laps.model.ApplicationForm;
-import sg.edu.nus.spring_laps.model.Department;
 import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.ApplicationService;
 import sg.edu.nus.spring_laps.service.PublicHolidayService;
@@ -83,7 +81,7 @@ public class AnnualLeaveValidator implements ConstraintValidator<ValidAnnualLeav
     }
 
     public boolean isHoliday(LocalDate date) {
-        List<LocalDate> publicHolidaysDates = publicHolidayService.findAllPublicHolidays();
+        List<LocalDate> publicHolidaysDates = publicHolidayService.findAllPublicHolidaysDate();
         if (publicHolidaysDates.contains(date) || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
             return true;
         }

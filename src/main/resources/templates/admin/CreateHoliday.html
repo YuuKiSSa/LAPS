@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Public Holiday</title>
+</head>
+<body>
+    <h1>Create Public Holiday</h1>
+    <form th:action="@{/admin/PublicHoliday/create}" th:object="${holiday}" method="post">
+        <label for="date">Date:</label>
+        <input type="date" id="date" th:field="*{date}" /><br><br>
+
+        <label for="holidayName">Holiday Name:</label>
+        <input type="text" id="holidayName" th:field="*{holidayName}" /><br><br>
+
+        <button type="submit">Add Holiday</button>
+    </form>
+</body>
+
+</html>

@@ -6,5 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface PublicHolidayService {
-    List<LocalDate> findAllPublicHolidays();
+    List<LocalDate> findAllPublicHolidaysDate();
+    List<PublicHoliday> findAllHoliday();
+    void saveHoliday(PublicHoliday publicHoliday);
 }

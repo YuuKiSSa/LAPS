@@ -306,7 +306,7 @@ public class ApplicationController {
     }
 
     private boolean isHoliday(LocalDate date){
-        List<LocalDate> publicHolidaysDates = publicHolidayService.findAllPublicHolidays();
+        List<LocalDate> publicHolidaysDates = publicHolidayService.findAllPublicHolidaysDate();
         if (publicHolidaysDates.contains(date) || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY){
             return true;
         }

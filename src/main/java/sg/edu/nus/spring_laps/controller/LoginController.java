@@ -32,7 +32,7 @@ import sg.edu.nus.spring_laps.service.StaffService;
 			if (admin != null) {
 				model.addAttribute("user", admin);
 				session.setAttribute("userId", admin.getUserId());
-				return "admin/admin-home";
+				return "redirect:/admin";
 			}
 		} else {
 			Staff staff = staffService.authenticateStaff(userId, password);
