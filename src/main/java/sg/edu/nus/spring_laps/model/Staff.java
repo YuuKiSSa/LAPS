@@ -10,23 +10,16 @@ import java.util.List;
 @Entity
 public class Staff {
     @Id
-    @Size(min=3, max=20, 
-    message = "userId must be 3-20 characters")
-    @NotBlank(message = "UserId is required")
+   
     @Column(length = 20)
     private String userId;
     
-    @Size(min=6, 
-    message = "password must be at least 6 characters")
-    @NotBlank(message = "Password is required")
     @Column(length = 20)
     private String password;
     
-    @NotBlank(message = "Name is required")
     @Column(length = 15)
     private String name;
     
-    @Email(message = "Please provide a valid email address")
     @Column(length = 25)
     private String email;
     private boolean status;

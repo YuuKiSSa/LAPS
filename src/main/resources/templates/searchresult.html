@@ -21,6 +21,7 @@
                 <th>Email</th>
                 <th>Hierarchy</th>
                 <th>Department</th>
+				<th>Leave Entitlements</th>
                 <th>Actions</th>
             </tr>
             <!-- 使用Thymeleaf语法遍历展示员工信息 -->
@@ -41,6 +42,9 @@
                     <td>
                         <input type="text" name="department.name" th:value="${staff.department.name}" readonly>
                     </td>
+					<td>
+					 <input type="text" name="status" th:value="${staff.status}" readonly>
+					 </td>
                     <td>
                         <button type="button" onclick="enableEdit(this)">Edit</button>
                         <button type="submit">Save</button>

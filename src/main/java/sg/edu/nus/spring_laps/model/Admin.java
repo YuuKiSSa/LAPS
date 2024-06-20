@@ -7,14 +7,10 @@ import jakarta.validation.constraints.Size;
 @Entity
 public class Admin {
     @Id
-    @Size(min=3, max=20, 
-    message = "userId must be 3-20 characters")
-    @NotBlank(message = "UserId is required")
     @Column(length = 20)
     private String userId;
     
-    @Size(min=6,message = "password must be at least 6 characters")
-    @NotBlank(message = "Password is required")
+  
     @Column(length = 20)
     private String password;
 

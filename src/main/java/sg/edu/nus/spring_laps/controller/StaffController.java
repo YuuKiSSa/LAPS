@@ -40,23 +40,21 @@ public class StaffController {
       model.addAttribute("staff", new Staff());
       //Department d=new Department();
       List<Department> department=departmentService.findAllDepartment();
+      System.out.print(department);
       List<Integer> hierarchy=adminService.findAllHierarchy();
       model.addAttribute("department",department);
       model.addAttribute("hierarchy",hierarchy);
       return "createStaff";
   }
+
   @PostMapping("/create")    //保存员工
-  public String saveStaff(@ModelAttribute("staff") @Valid Staff staff,
+  public String saveStaff(@ModelAttribute("staff") Staff staff,
                           BindingResult bindingResult, Model model) {
       if (bindingResult.hasErrors()) {
-          List<Department> department=departmentService.findAllDepartment();
-          List<Integer> hierarchy=adminService.findAllHierarchy();
-          model.addAttribute("department",department);
-          model.addAttribute("hierarchy",hierarchy);
           return "createStaff";
       }
       adminService.saveStaff(staff);
-      return "redirect:/";
+      return "redirect:/admin/create";
   }
   
   @GetMapping("/department/edit")    //保存在一个部门编辑的员工

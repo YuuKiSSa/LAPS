@@ -35,7 +35,7 @@ public class AdminController {
         return "adminResearch1";
     }
 	@PostMapping("/Asearch/edit")
-	 public String editAdmin(@ModelAttribute("admin")@Valid Admin admin,
+	 public String editAdmin(@ModelAttribute("admin")Admin admin,
              BindingResult bindingResult, Model model) {
 		if (bindingResult.hasErrors()) {
 		return "adminResearch1";

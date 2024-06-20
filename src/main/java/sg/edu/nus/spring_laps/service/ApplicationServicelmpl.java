@@ -7,13 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import sg.edu.nus.spring_laps.model.Application;
-import sg.edu.nus.spring_laps.model.ApplicationForm;
+import sg.edu.nus.spring_laps.model.ApplicationType;
 import sg.edu.nus.spring_laps.repository.ApplicationRepository;
+import sg.edu.nus.spring_laps.repository.ApplicationTypeRepository;
 @Service
 @Transactional(readOnly = false)
 public class ApplicationServicelmpl implements ApplicationService {
 	@Autowired
 	private ApplicationRepository applicationRepository;
+	@Autowired
+	private ApplicationTypeRepository applicationTypeRepository;
 
 	 public Application findApplicationById(String query) {
 	        try {
@@ -55,4 +58,13 @@ public class ApplicationServicelmpl implements ApplicationService {
 		// TODO Auto-generated method stub
 		return applicationRepository.findAll();
 	}
+	
+	public void updateApplication(Application application) {
+		ApplicationType applicationType = applicationTypeRepository.findById(application.getApplicationType().getId()).orElse(null);
+		System.out.println(applicationType);
+        if (applicationType != null) {
+            application.setApplicationType(applicationType);
+            applicationRepository.save(application);
+	}
+        }
 }

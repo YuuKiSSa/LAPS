@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ch.qos.logback.core.model.Model;
 import sg.edu.nus.spring_laps.model.Admin;
 import sg.edu.nus.spring_laps.model.Application;
-import sg.edu.nus.spring_laps.model.ApplicationForm;
 import sg.edu.nus.spring_laps.model.ApplicationType;
 import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.service.AdminService;
@@ -64,18 +63,15 @@ public class ApplicationController {
 	    return "appResearch1";
 	}
 	@PostMapping("/appSearch/edit")
-	public String editAdmin(@ModelAttribute("app") Application application, 
+	public String editAdmin(@ModelAttribute Application application, 
 			BindingResult bindingResult, ModelMap model) {
-		System.out.println(application.getApplicationType());
+		//System.out.println(application.getApplicationType());
 	    if (bindingResult.hasErrors()) {
 	        return "error";
 	    }
-	    ApplicationType applicationType=application.getApplicationType();
-	    application.setApplicationType(applicationType);
-
-
+	    applicationService.updateApplication(application);
 	    // 保存 Application
-	    applicationService.saveApplication(application);
+	   // applicationService.saveApplication(application);
 
 	    return "redirect:/admin/appSearch";
 	}

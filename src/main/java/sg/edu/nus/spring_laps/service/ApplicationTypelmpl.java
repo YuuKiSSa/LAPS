@@ -8,7 +8,7 @@ import sg.edu.nus.spring_laps.model.ApplicationType;
 import sg.edu.nus.spring_laps.repository.ApplicationTypeRepository;
 
 @Service
-@Transactional(readOnly = false)
+@Transactional(readOnly = true)
 public class ApplicationTypelmpl implements ApplicationTypeService{
 
 	@Autowired

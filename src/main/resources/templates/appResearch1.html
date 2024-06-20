@@ -5,84 +5,98 @@
 </head>
 <body>
     <h1>Search Application</h1>
-	<p>You can input the application ID,ID of applicant,Name of applicant</p>
+    <p>You can input the application ID, ID of applicant, Name of applicant</p>
     <form th:action="@{/admin/appSearch}" method="post">
         <label for="query">Search:</label>
         <input type="text" id="query" name="query" th:value="${query}"><br>
         <input type="submit" value="search">
     </form>
-	 <!-- 检查是否有搜索结果 -->
-	    <div th:if="${applications != null}">
-	        <table>
-	            <tr>
-	                <th>Id</th>
-					<th>User</th>
-	                <th>Description</th>
-	                <th>Start_time</th>
-	                <th>End_time</th>
-	                <th>Status</th>
-	                <th>Type</th>
-					<th>User</th>
-	            </tr>
-	            <!-- 使用Thymeleaf语法遍历展示员工信息 -->
-	            <tr th:each="app : ${applications}">
-	                <form th:action="@{/admin/appSearch/edit}" method="post">
-	                    <td>
-	                       <input type="text" name="Id" id="Id" th:value="${app.id}" readonly>
-	                    </td>
-						<td>
-						  <input type="text" name="staff" id="staff" th:value="${app.staff.userId}" readonly>
-						 </td>
-	                    <td>
-	                        <input type="text" name="description" th:value="${app.description}" readonly>
-	                    </td>
-	                    <td>
-	                        <input type="text" name="startTime" th:value="${app.startTime}" readonly>
-	                    </td>
-	                    <td>
-	                        <input type="text" name="endTime" th:value="${app.endTime}" readonly>
-	                    </td>
-	                    <td>
-	                        <input type="text" name="status" th:value="${app.status}" readonly>
-	                    </td>
-						<td>
-						    <input type="text" name="applicationType" id="applicationType" th:value="${app.applicationType.type}" readonly>
-						</td>
-	                    <td>
-	                        <button type="button" onclick="enableEdit(this)">Edit</button>
-	                        <button type="submit">Save</button>
-	                    </td>
-	                </form>
-	            </tr>
-				
-	        </table>
-	    </div>
-		<a href="/admin">
-		  <button>Back to the dashboard</button>
-		</a>
-	</body>
-	</html>
+
+    <!-- 检查是否有搜索结果 -->
+    <div th:if="${applications != null}">
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>User</th>
+                <th>Description</th>
+                <th>Start_time</th>
+                <th>End_time</th>
+                <th>Status</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+            <!-- 使用Thymeleaf语法遍历展示员工信息 -->
+            <tr th:each="app : ${applications}">
+                <form th:action="@{/admin/appSearch/edit}" method="post">
+                    <td>
+                        <input type="text" name="id" id="id" th:value="${app.id}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="staff" id="staff" th:value="${app.staff.userId}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="description" th:value="${app.description}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="startTime" th:value="${app.startTime}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="endTime" th:value="${app.endTime}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="status" th:value="${app.status}" readonly>
+                    </td>
+                    <td>
+                        <input type="hidden" name="applicationType.id" th:value="${app.applicationType.id}">
+                        <input type="hidden" name="applicationType.type" th:value="${app.applicationType.type}">
+                        <input type="text" name="applicationTypeDisplay" th:value="${app.applicationType.type}" readonly>
+                    </td>
+                    <td>
+                        <button type="button" onclick="enableEdit(this)">Edit</button>
+                        <button type="submit">Save</button>
+                    </td>
+                </form>
+            </tr>
+        </table>
+    </div>
+    <a href="/admin">
+        <button>Back to the dashboard</button>
+    </a>
 	<script>
 	    function enableEdit(button) {
 	        var row = button.parentNode.parentNode; // 获取按钮的父级行
-	        var typeInput = row.querySelector('input[name="applicationType"]'); // 获取应用类型的 input 元素
-	        
-	        if (typeInput) {
-	            var select = document.createElement('select'); // 创建一个新的 select 元素
-	            select.name = 'applicationType'; // 设置表单名称匹配后端模型
+	        var displayInput = row.querySelector('input[name="applicationTypeDisplay"]'); // 获取应用类型的显示 input 元素
+	        var hiddenInputId = row.querySelector('input[name="applicationType.id"]'); // 获取隐藏的应用类型 ID input 元素
+	        var hiddenInputType = row.querySelector('input[name="applicationType.type"]'); // 获取隐藏的应用类型 Type input 元素
 
-	            var types = ['Medical', 'Compensation', 'Annual']; // 假设这三个是应用类型
+	        if (displayInput) {
+	            var select = document.createElement('select'); // 创建一个新的 select 元素
+	            select.name = 'applicationType.id'; // 设置表单名称匹配后端模型
+
+	            var types = [
+	                { id: 1, type: 'Medical' },
+	                { id: 2, type: 'Compensation' },
+	                { id: 3, type: 'Annual' }
+	            ]; // 假设这些是应用类型
+
 	            types.forEach(function(type) {
 	                var option = document.createElement('option'); // 创建一个新的选项
-	                option.value = type;
-	                option.text = type;
-	                if (type === typeInput.value) { // 如果是当前应用类型
+	                option.value = type.id;
+	                option.text = type.type;
+	                if (type.type === hiddenInputType.value) { // 如果是当前应用类型
 	                    option.selected = true;
 	                }
 	                select.appendChild(option); // 添加选项到 select 元素中
 	            });
 
-	            typeInput.parentNode.replaceChild(select, typeInput); // 替换 input 元素为 select 元素
+	            select.addEventListener('change', function() {
+	                hiddenInputId.value = select.value; // 当选择改变时，更新隐藏的 input 元素值
+	                hiddenInputType.value = select.options[select.selectedIndex].text; // 更新隐藏的类型文本值
+	            });
+
+	            displayInput.parentNode.replaceChild(select, displayInput); // 替换显示的 input 元素为 select 元素
 	        }
 	    }
 	</script>
+</body>
+</html>
