@@ -36,8 +36,8 @@ public class StaffServiceImpl implements StaffService {
         return staffRepository.findByUserIdAndPassword(userId, password);
     }
     @Override
-    public List<Staff> getSubordinates(int managerHierarchy) {
-        return staffRepository.findByHierarchyLessThan(managerHierarchy);
+    public List<Staff> getSubordinates(int departmentId,int managerHierarchy) {
+        return staffRepository.findByDepartmentIdAndHierarchyLessThan(departmentId,managerHierarchy);
     }
 
 }

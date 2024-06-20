@@ -24,8 +24,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<Application> findByStartTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
     @Query("SELECT a FROM Application a WHERE a.startTime BETWEEN :startTime AND :endTime AND a.applicationType.type = :applicationType")
     List<Application> findByStartTimeBetweenAndApplicationType(LocalDateTime startTime, LocalDateTime endTime, String applicationType);
-    @Query("SELECT a FROM Application a WHERE a.staff = :staff AND a.applicationType.type = :type")
-    List<Application> findByStaffAndApplicationType(Staff staff, String type);
+    @Query("SELECT a FROM Application a WHERE a.staff.userId = :userId AND a.applicationType.type = :type")
+    List<Application> findByStaffUserIdAndApplicationType_Type(String userId, String type);
     @Query("SELECT a FROM Application a WHERE a.applicationType.type = :applicationType")
     List<Application> findByApplicationType(String applicationType);
     List<Application> findByStaffIn(List<Staff> staff);

@@ -9,5 +9,5 @@ public interface StaffService {
     Staff findByUserId(String userId);
     Admin authenticateAdmin(String userId, String password);
     Staff authenticateStaff(String userId, String password);
-    List<Staff> getSubordinates(int managerHierarchy);
+    List<Staff> getSubordinates(int managerHierarchy,int departmentId);
 }

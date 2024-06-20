@@ -8,5 +8,5 @@ import java.util.List;
 public interface StaffRepository extends JpaRepository<Staff, String> {
     Staff findByUserId(String userId);
     Staff findByUserIdAndPassword(String userId, String password);
-    List<Staff> findByHierarchyLessThan(int hierarchy);
+    List<Staff> findByDepartmentIdAndHierarchyLessThan(int departmentId, int hierarchy);
 }

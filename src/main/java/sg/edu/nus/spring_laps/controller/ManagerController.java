@@ -13,6 +13,7 @@ import sg.edu.nus.spring_laps.repository.StaffRepository;
 import sg.edu.nus.spring_laps.service.ApplicationService;
 import sg.edu.nus.spring_laps.service.ReportService;
 import sg.edu.nus.spring_laps.service.StaffService;
+import sg.edu.nus.spring_laps.service.EmailService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -30,7 +31,8 @@ public class ManagerController {
     private ApplicationService applicationService;
     @Autowired
     private ReportService reportService;
-
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private StaffRepository staffRepository;
     @Autowired
@@ -53,25 +55,6 @@ public class ManagerController {
         return "manager/applications";
     }
 
-    /*@GetMapping("/application/{userId}/{applicationId}/details")
-    public String viewApplicationDetails(@PathVariable String userId, @PathVariable Long applicationId, Model model) {
-        Optional<Application> applicationOpt = applicationService.findById(applicationId);
-        if (applicationOpt.isPresent()) {
-            Application application = applicationOpt.get();
-            if (application.getStaff() != null) {
-                model.addAttribute("application", application);
-                model.addAttribute("userId", userId);
-                return "manager/applicationDetails";
-            } else {
-                // Handle case where staff is null
-                model.addAttribute("error", "Staff information is missing for this application.");
-                return "error/500";
-            }
-        } else {
-            // Handle case where application is not found
-            return "error/404";
-        }*/
-
     @GetMapping("/application/{userId}/{applicationId}/details")
     public String viewApplicationDetails(@PathVariable String userId, @PathVariable Long applicationId, Model model) {
         Application application = applicationService.findApplicationById(applicationId);
@@ -83,7 +66,7 @@ public class ManagerController {
     @GetMapping("/subordinates/{userId}/history")
     public String viewSubordinatesHistory(@PathVariable String userId, Model model) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
-        List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy());
+        List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy(),manager.getDepartment().getId());
         List<Application> applications = applicationService.getApplicationsForSubordinates(subordinates);
         model.addAttribute("applications", applications);
         model.addAttribute("userId", userId);
@@ -94,6 +77,10 @@ public class ManagerController {
     @PostMapping("/applications/{id}/approve")
     public String approveApplication(@PathVariable Long id, @RequestParam String userId) {
         applicationService.approveApplication(id);
+        Application application = applicationService.findApplicationById(id);
+        String loginLink = "http://localhost:8080/login";  // 替换为你的实际登录页面URL
+        String emailContent = "Your leave application has been approved. You can view the details and comments by logging in here: " + loginLink;
+        emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Approved", emailContent);
         return "redirect:/manager/applications/" + userId;
     }
 
@@ -101,9 +88,12 @@ public class ManagerController {
     @PostMapping("/applications/{id}/reject")
     public String rejectApplication(@PathVariable Long id, @RequestParam String comment, @RequestParam String userId) {
         applicationService.rejectApplication(id, comment);
+        Application application = applicationService.findApplicationById(id);
+        String loginLink = "http://localhost:8080/login";  // 替换为你的实际登录页面URL
+        String emailContent = "Your leave application has been rejected. Comment: " + comment + ". You can view the details and comments by logging in here: " + loginLink;
+        emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Rejected", emailContent);
         return "redirect:/manager/applications/" + userId;
     }
-
 
     //report .csv views
     @GetMapping("/report/leave")
@@ -118,9 +108,9 @@ public class ManagerController {
     }
 
     @GetMapping("/report/compensation")
-    public ResponseEntity<byte[]> getCompensationReport(@RequestParam(required = false) Staff staff) {
-        List<Application> applications = (staff != null)
-                ? reportService.getCompensationClaimsByStaff(staff)
+    public ResponseEntity<byte[]> getCompensationReport(@RequestParam(required = false) String userId) {
+        List<Application> applications = (userId != null)
+                ? reportService.getCompensationClaimsByStaffUserId(userId)
                 : reportService.getAllCompensationClaims();
         String csvContent = generateCSV(applications);
 
@@ -135,10 +125,12 @@ public class ManagerController {
         try (OutputStreamWriter writer = new OutputStreamWriter(out, StandardCharsets.UTF_8)) {
             writer.write("ID,userID,applicationType,Start Time,End Time,Status\n");
             for (Application application : applications) {
+                String name = (application.getStaff() != null) ? application.getStaff().getName() : "N/A";
+                String type = application.getApplicationType().getType();
                 writer.write(String.format("%d,%s,%s,%s,%s,%s\n",
                         application.getId(),
-                        application.getStaff().getName(),
-                        application.getApplicationType(),
+                        name,
+                        type,
                         application.getStartTime().toString(),
                         application.getEndTime().toString(),
                         application.getStatus()));

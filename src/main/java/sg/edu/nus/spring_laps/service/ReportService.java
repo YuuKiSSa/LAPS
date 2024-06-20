@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReportService {
-    public List<Application> getApplicationsByPeriodAndType(LocalDateTime startTime, LocalDateTime endTime, String applicationType);
-    public List<Application> getCompensationClaimsByStaff(Staff staff);
-    public List<Application> getAllCompensationClaims();
+    List<Application> getApplicationsByPeriodAndType(LocalDateTime startTime, LocalDateTime endTime, String applicationType);
+    List<Application> getCompensationClaimsByStaffUserId(String userId);
+    List<Application> getAllCompensationClaims();
 }

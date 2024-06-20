@@ -16,17 +16,17 @@ public class ReportServiceImpl implements ReportService{
     private ApplicationRepository applicationRepository;
 
     public List<Application> getApplicationsByPeriodAndType(LocalDateTime startTime, LocalDateTime endTime, String applicationType) {
-        if (applicationType.equals("all")) {
+        if (applicationType.equals("All")) {
             return applicationRepository.findByStartTimeBetween(startTime, endTime);
         }
         return applicationRepository.findByStartTimeBetweenAndApplicationType(startTime, endTime, applicationType);
     }
 
-    public List<Application> getCompensationClaimsByStaff(Staff staff) {
-        return applicationRepository.findByStaffAndApplicationType(staff, "compensation");
+    public List<Application> getCompensationClaimsByStaffUserId(String userId) {
+        return applicationRepository.findByStaffUserIdAndApplicationType_Type(userId, "Compensation");
     }
 
     public List<Application> getAllCompensationClaims() {
-        return applicationRepository.findByApplicationType("compensation");
+        return applicationRepository.findByApplicationType("Compensation");
     }
 }

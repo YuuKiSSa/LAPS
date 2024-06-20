@@ -1,4 +1,4 @@
-package sg.edu.nus.spring_laps.WebConfig;
+package sg.edu.nus.spring_laps.Config;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
