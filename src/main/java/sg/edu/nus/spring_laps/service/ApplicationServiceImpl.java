@@ -67,5 +67,26 @@ public class ApplicationServiceImpl implements ApplicationService {
     public Page<Application> findAllByStaff(Staff staff, Pageable pageable) {
         return applicationRepository.findAllByStaff(staff, pageable);
     }
+    @Override
+    public List<Application> getApplicationsForManager(int hierarchy, int departmentId) {
+        int subordinateHierarchy = hierarchy - 1;
+        return applicationRepository.findByStaff_HierarchyAndStaff_Department_Id(subordinateHierarchy, departmentId);
+    }
+    @Override
+    public List<Application> getApplicationsForSubordinates(List<Staff> subordinates) {
+        return applicationRepository.findByStaffIn(subordinates);
+    }
+    @Override
+    public void approveApplication(Long applicationId) {
+        Application application = applicationRepository.findById(applicationId).orElseThrow();
+        application.setStatus("Approved");
+        applicationRepository.save(application);
+    }
 
+    @Override
+    public void rejectApplication(Long applicationId, String comment) {
+        Application application = applicationRepository.findById(applicationId).orElseThrow();
+        application.setStatus("Rejected");
+        applicationRepository.save(application);
+    }
 }

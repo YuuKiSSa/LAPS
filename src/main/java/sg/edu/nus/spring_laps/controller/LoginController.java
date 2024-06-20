@@ -39,9 +39,9 @@ import sg.edu.nus.spring_laps.service.StaffService;
 			if (staff != null) {
 				model.addAttribute("user", staff);
 				session.setAttribute("userId", staff.getUserId());
-				if (staff.getHierarchy() >= 1) {
+				if (role.equals("Manager") && staff.getHierarchy() >= 1) {
 					return "managerHome";
-				} else {
+				} else if (role.equals("Employee")) {
 					return "redirect:/staffDashboard";
 				}
 			}

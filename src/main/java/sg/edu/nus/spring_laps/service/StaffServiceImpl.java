@@ -8,6 +8,8 @@ import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.repository.AdminRepository;
 import sg.edu.nus.spring_laps.repository.StaffRepository;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class StaffServiceImpl implements StaffService {
@@ -33,6 +35,9 @@ public class StaffServiceImpl implements StaffService {
     public Staff authenticateStaff(String userId, String password) {
         return staffRepository.findByUserIdAndPassword(userId, password);
     }
-
+    @Override
+    public List<Staff> getSubordinates(int managerHierarchy) {
+        return staffRepository.findByHierarchyLessThan(managerHierarchy);
+    }
 
 }

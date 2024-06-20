@@ -272,22 +272,27 @@ public class ApplicationController {
         return "redirect:/staffDashboard/displayApplication";
     }
 
-    public long compensationTime(Staff staff){
+    private long compensationTime(Staff staff){
         ApplicationType applicationTypePlus = applicationService.findApplicationTypeByName("Compensation");
         ApplicationType applicationTypeSub = applicationService.findApplicationTypeByName("Compensation Leave");
         List<Application> applicationsPlus = applicationService.findApplicationsByStaffAndApplicationType(staff, applicationTypePlus);
         List<Application> applicationsSub = applicationService.findApplicationsByStaffAndApplicationType(staff, applicationTypeSub);
         Duration totalDuration = Duration.ZERO;
         for (Application application : applicationsPlus) {
-            totalDuration = totalDuration.plus(Duration.between(application.getStartTime(), application.getEndTime()));
+            if (application.getStatus().equals("Approved")){
+                totalDuration = totalDuration.plus(Duration.between(application.getStartTime(), application.getEndTime()));
+            }
         }
         for (Application application : applicationsSub) {
+            if (application.getStatus().equals("Cancel") || application.getStatus().equals("Deleted") || application.getStatus().equals("Rejected")){
+                continue;
+            }
             totalDuration = totalDuration.minus(Duration.between(application.getStartTime(), application.getEndTime()));
         }
         return totalDuration.toHours();
     }
 
-    public boolean isHoliday(LocalDate date){
+    private boolean isHoliday(LocalDate date){
         List<LocalDate> publicHolidaysDates = publicHolidayService.findAllPublicHolidays();
         if (publicHolidaysDates.contains(date) || date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY){
             return true;
@@ -295,7 +300,7 @@ public class ApplicationController {
         return false;
     }
 
-    public int calAnnualLeaveDaysLeft(int annualLeaveDays, Staff staff){
+    private int calAnnualLeaveDaysLeft(int annualLeaveDays, Staff staff){
         List<Application> applications = applicationService.findAnnualLeaveByStaffAndYear(staff, LocalDateTime.now().getYear());
         if (annualLeaveDays > 14){
             for (Application application : applications) {

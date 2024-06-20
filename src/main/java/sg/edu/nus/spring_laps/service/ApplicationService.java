@@ -19,4 +19,8 @@ public interface ApplicationService {
     List<Application> findMedicalLeaveByStaffAndYear(Staff staff, int year);
     List<Application> findApplicationsByStaffAndApplicationType(Staff staff, ApplicationType type);
     List<Application> findAnnualLeaveByStaffAndYear(Staff staff, int year);
+    List<Application> getApplicationsForManager(int hierarchy, int departmentId);
+    List<Application> getApplicationsForSubordinates(List<Staff> subordinates);
+    void approveApplication(Long applicationId);
+    void rejectApplication(Long applicationId, String comment);
 }
