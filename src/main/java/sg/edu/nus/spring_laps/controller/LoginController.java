@@ -32,7 +32,7 @@ import sg.edu.nus.spring_laps.service.StaffService;
 			if (admin != null) {
 				model.addAttribute("user", admin);
 				session.setAttribute("userId", admin.getUserId());
-				return "adminHome";
+				return "admin/admin-home";
 			}
 		} else {
 			Staff staff = staffService.authenticateStaff(userId, password);
@@ -40,9 +40,9 @@ import sg.edu.nus.spring_laps.service.StaffService;
 				model.addAttribute("user", staff);
 				session.setAttribute("userId", staff.getUserId());
 				if (role.equals("Manager") && staff.getHierarchy() >= 1) {
-					return "managerHome";
+					return "manager/manager-home";
 				} else if (role.equals("Employee")) {
-					return "redirect:/staffDashboard";
+					return "redirect:/staffDashboard/";
 				}
 			}
 		}

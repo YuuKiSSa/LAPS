@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Compensation Leave</title>
-    <link rel="stylesheet" href="/create-application.css">
+    <link rel="stylesheet" href="/CSS/create-application.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/create-application-script.js"></script>
+    <script src="/JavaScript/create-application-script.js"></script>
 </head>
 <body>
 <h1>Application Form</h1>
@@ -49,7 +49,7 @@
             </div>
             <div>
                 <button type="submit">Submit</button>
-                <button type="button" id="backButton" onclick="window.location.href = '/staffDashboard'">Back</button>
+                <button type="button" id="backButton" onclick="window.location.href = '/staffDashboard/'">Back</button>
             </div>
         </form>
         <div class="error-messages" th:if="${globalErrors != null}">

@@ -1,4 +1,4 @@
-package sg.edu.nus.spring_laps.Config;
+package sg.edu.nus.spring_laps.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;

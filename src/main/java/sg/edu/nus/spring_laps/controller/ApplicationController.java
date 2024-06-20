@@ -31,6 +31,19 @@ public class ApplicationController {
     @Autowired
     PublicHolidayService publicHolidayService;
 
+    @GetMapping("/")
+    public String staffDashboard(HttpSession session, Model model) {
+        String userId = (String) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+        Staff staff = staffService.findByUserId(userId);
+        model.addAttribute("staff", staff);
+        List<ApplicationType> applicationTypes = applicationService.findAllApplicationTypes();
+        model.addAttribute("applicationTypes", applicationTypes);
+        return "staff/staff-dashboard";
+    }
+
     @GetMapping("/createApplication")
     public String createApplication(@RequestParam(value = "type", required = false) int type, Model model, HttpSession session) {
         ApplicationForm applicationForm = new ApplicationForm();
@@ -59,11 +72,11 @@ public class ApplicationController {
             model.addAttribute("annualLeaveDaysLeft", annualLeaveDaysLeft);
         }
         switch (appTypeName){
-            case "Annual Leave": return "annual-leave";
-            case "Medical Leave": return  "medical-leave";
-            case "Compensation Leave": return  "compensation-leave";
-            case "Compensation": return  "compensation";
-            default: return "create-application";
+            case "Annual Leave": return "staff/annual-leave";
+            case "Medical Leave": return  "staff/medical-leave";
+            case "Compensation Leave": return  "staff/compensation-leave";
+            case "Compensation": return  "staff/compensation";
+            default: return "staff/create-application";
         }
     }
 
@@ -76,15 +89,15 @@ public class ApplicationController {
             model.addAttribute("globalErrors", bindingResult.getGlobalErrors());
             switch (applicationForm.getApplicationType()) {
                 case "Annual Leave":
-                    return "annual-leave";
+                    return "staff/annual-leave";
                 case "Medical Leave":
-                    return "medical-leave";
+                    return "staff/medical-leave";
                 case "Compensation Leave":
-                    return "compensation-leave";
+                    return "staff/compensation-leave";
                 case "Compensation":
-                    return "compensation";
+                    return "staff/compensation";
                 default:
-                    return "create-application";
+                    return "staff/create-application";
             }
         }
         Staff staff = staffService.findByUserId(applicationForm.getUserId());
@@ -126,24 +139,24 @@ public class ApplicationController {
     @GetMapping("/displayApplication")
     public String displayApplication(@RequestParam(value = "applicationId", required = false) Long applicationId, HttpSession session, Model model) {
         if (session.getAttribute("applicationId") == null && applicationId == null) {
-            return "application-error";
+            return "staff/application-error";
         }
         if (applicationId == null) {
             applicationId = (Long) session.getAttribute("applicationId");
         }
         Application application = applicationService.findApplicationById(applicationId);
         if (application == null) {
-            return "application-error";
+            return "staff/application-error";
         }
         model.addAttribute("displayApplication", application);
-        return "display-application";
+        return "staff/display-application";
     }
 
     @GetMapping("/editApplication")
     public String editApplication(@RequestParam(value = "applicationId") Long applicationId, HttpSession session, Model model) {
         Application application = applicationService.findApplicationById(applicationId);
         if (application == null) {
-            return "application-error";
+            return "staff/application-error";
         }
         model.addAttribute("applicationId", applicationId);
         String userId = (String) session.getAttribute("userId");
@@ -173,11 +186,11 @@ public class ApplicationController {
         }
 
         switch (application.getApplicationType().getType()){
-            case "Annual Leave": return "annual-leave";
-            case "Medical Leave": return  "medical-leave";
-            case "Compensation Leave": return  "compensation-leave";
-            case "Compensation": return  "compensation";
-            default: return "create-application";
+            case "Annual Leave": return "staff/annual-leave";
+            case "Medical Leave": return  "staff/medical-leave";
+            case "Compensation Leave": return  "staff/compensation-leave";
+            case "Compensation": return  "staff/compensation";
+            default: return "staff/create-application";
         }
     }
 
@@ -189,22 +202,22 @@ public class ApplicationController {
             model.addAttribute("globalErrors", bindingResult.getGlobalErrors());
             switch (applicationForm.getApplicationType()) {
                 case "Annual Leave":
-                    return "annual-leave";
+                    return "staff/annual-leave";
                 case "Medical Leave":
-                    return "medical-leave";
+                    return "staff/medical-leave";
                 case "Compensation Leave":
-                    return "compensation-leave";
+                    return "staff/compensation-leave";
                 case "Compensation":
-                    return "compensation";
+                    return "staff/compensation";
                 default:
-                    return "create-application";
+                    return "staff/create-application";
             }
         }
 
         Long applicationId = applicationForm.getApplicationId();
         Application savedApplication = applicationService.findApplicationById(applicationId);
         if (savedApplication == null) {
-            return "application-error";
+            return "staff/application-error";
         }
         savedApplication.setStatus("Updated");
         String selectTime = applicationForm.getSelectTime();
@@ -246,20 +259,20 @@ public class ApplicationController {
         model.addAttribute("applications", applications.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", applications.getTotalPages());
-        return "application-history";
+        return "staff/application-history";
     }
 
     @GetMapping("/cancelApplication")
     public String cancelApplication(@RequestParam("applicationId") Long applicationId, HttpSession session, Model model) {
         if (applicationId == null) {
-            return "application-error";
+            return "staff/application-error";
         }
         if (session.getAttribute("userId") == null) {
             return "/login";
         }
         Application application = applicationService.findApplicationById(applicationId);
         if (application == null) {
-            return "application-error";
+            return "staff/application-error";
         }
         String status = application.getStatus();
         if (status.equals("Approved")) {

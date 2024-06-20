@@ -18,7 +18,6 @@ import sg.edu.nus.spring_laps.service.EmailService;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,7 @@ public class ManagerController {
     public String Home(@PathVariable String userId, Model model) {
         Staff manager = staffRepository.findByUserId(userId);
         model.addAttribute("user", manager);
-        return "managerHome";
+        return "manager/manager-home";
     }
 
     @GetMapping("/applications/{userId}")
@@ -52,7 +51,7 @@ public class ManagerController {
         Map<Staff, List<Application>> applicationsByStaff = applications.stream().collect(Collectors.groupingBy(Application::getStaff));
         model.addAttribute("applicationsByStaff", applicationsByStaff);
         model.addAttribute("userId", userId);  // 传递 userId 以便在重定向时使用
-        return "manager/applications";
+        return "manager/manager-applications";
     }
 
     @GetMapping("/application/{userId}/{applicationId}/details")
@@ -60,7 +59,7 @@ public class ManagerController {
         Application application = applicationService.findApplicationById(applicationId);
         model.addAttribute("app", application);
         model.addAttribute("userId", userId);
-        return "manager/applicationDetails";
+        return "manager/application-details";
     }
 
     @GetMapping("/subordinates/{userId}/history")
@@ -70,7 +69,7 @@ public class ManagerController {
         List<Application> applications = applicationService.getApplicationsForSubordinates(subordinates);
         model.addAttribute("applications", applications);
         model.addAttribute("userId", userId);
-        return "manager/subordinatesHistory";
+        return "manager/subordinates-history";
     }
 
 
