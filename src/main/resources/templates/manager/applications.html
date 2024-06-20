@@ -39,14 +39,14 @@
 	<h2>Generate Leave Report</h2>
 	    <form action="/manager/report/leave" method="get">
 	        <label for="startTime">Start Time:</label>
-	        <input type="date" id="startTime" name="startTime" required>
+	        <input type="datetime-local" id="startTime" name="startTime" required>
 	        <label for="endTime">End Time:</label>
-	        <input type="date" id="endTime" name="endTime" required>
+	        <input type="datetime-local" id="endTime" name="endTime" required>
 	        <label for="applicationType">Type:</label>
 	        <select id="applicationType" name="applicationType">
-	            <option value="annual">Annual</option>
-	            <option value="compensation">Compensation</option>
-	            <option value="medical">Medical</option>
+	            <option value="annual leave">Annual</option>
+	            <option value="compensation leave">Compensation</option>
+	            <option value="medical leave">Medical</option>
 	            <option value="all">All</option>
 	        </select>
 	        <button type="submit">Generate Report</button>

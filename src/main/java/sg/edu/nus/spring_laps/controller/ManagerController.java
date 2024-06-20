@@ -18,12 +18,14 @@ import sg.edu.nus.spring_laps.service.ApplicationService;
 import sg.edu.nus.spring_laps.service.EmailService;
 import sg.edu.nus.spring_laps.service.ReportService;
 import sg.edu.nus.spring_laps.service.StaffService;
+import sg.edu.nus.spring_laps.repository.ApplicationRepository;
 import sg.edu.nus.spring_laps.repository.StaffRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,7 +49,10 @@ public class ManagerController {
     public String viewApplications(@PathVariable String userId, Model model) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
         List<Application> applications = applicationService.getApplicationsForManager(manager.getHierarchy(), manager.getDepartment().getId());
-        Map<Staff, List<Application>> applicationsByStaff = applications.stream().collect(Collectors.groupingBy(Application::getStaff));
+        List<Application> filteredApplications = applications.stream()
+        	    .filter(application -> "Applied".equals(application.getStatus())|| "Updated".equals(application.getStatus()))
+        	    .collect(Collectors.toList());
+        Map<Staff, List<Application>> applicationsByStaff = filteredApplications.stream().collect(Collectors.groupingBy(Application::getStaff));
         model.addAttribute("applicationsByStaff", applicationsByStaff);
         model.addAttribute("userId", userId);  // 传递 userId 以便在重定向时使用
         return "manager/applications";
@@ -92,30 +97,30 @@ public class ManagerController {
     
    
     @PostMapping("/applications/{id}/approve")
-    public String approveApplication(@PathVariable Long id, @RequestParam String userId) {
+    public String approveApplication(@PathVariable Long id, @RequestParam String userId,Model model) {
         applicationService.approveApplication(id);
         Application application = applicationService.findById(id).orElseThrow();
-        String loginLink = "http://localhost:8080/login";  // 替换为你的实际登录页面URL
+        String loginLink = "http://localhost:8080/login";  
         String emailContent = "Your leave application has been approved. You can view the details and comments by logging in here: " + loginLink;
         emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Approved", emailContent);
         return "redirect:/manager/applications/" + userId;
     }
 
     @PostMapping("/applications/{id}/reject")
-    public String rejectApplication(@PathVariable Long id, @RequestParam String comment, @RequestParam String userId) {
-        applicationService.rejectApplication(id, comment);
+    public String rejectApplication(@PathVariable Long id, @RequestParam String comment, @RequestParam String userId,Model model) {
+        applicationService.rejectApplication(id, comment);   
         Application application = applicationService.findById(id).orElseThrow();
-        String loginLink = "http://localhost:8080/login";  // 替换为你的实际登录页面URL
+        String loginLink = "http://localhost:8080/login";  
         String emailContent = "Your leave application has been rejected. Comment: " + comment + ". You can view the details and comments by logging in here: " + loginLink;
         emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Rejected", emailContent);
         return "redirect:/manager/applications/" + userId;
     }
-    
+
     
     //report .csv views
     @GetMapping("/report/leave")
-    public ResponseEntity<byte[]> getLeaveReport(@RequestParam Date startTime, @RequestParam Date endTime, @RequestParam String applicationtype) {
-        List<Application> applications = reportService.getApplicationsByPeriodAndType(startTime, endTime,applicationtype);
+    public ResponseEntity<byte[]> getLeaveReport(@RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime, @RequestParam String applicationType) {
+        List<Application> applications = reportService.getApplicationsByPeriodAndType(startTime, endTime,applicationType);
         String csvContent = generateCSV(applications);
 
         return ResponseEntity.ok()

@@ -1,6 +1,7 @@
 package sg.edu.nus.spring_laps.service;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class ReportServiceImpl implements ReportService{
 	 @Autowired
 	 private ApplicationRepository applicationRepository;
 	 
-	 public List<Application> getApplicationsByPeriodAndType(Date startTime, Date endTime, String type) {
+	 public List<Application> getApplicationsByPeriodAndType(LocalDateTime startTime, LocalDateTime endTime, String type) {
 	        if (type.equals("all")) {
 	            return applicationRepository.findByStartTimeBetween(startTime, endTime);
 	        }
