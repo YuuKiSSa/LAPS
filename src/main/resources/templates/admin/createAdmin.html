@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Create Admin</title>
+  <style>
+    .error {
+      color: red;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Create Admin</h1>
+
+  <form id="adminForm" action="/admin/Acreate" method="post" th:object="${admin}" onsubmit="return validateForm()">
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" th:field="*{userId}" onblur="validateUserId()">
+    <span id="userIdError" class="error">User ID must be 8-10 characters long</span>
+    <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span>
+    <br><br/>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" th:field="*{password}" onblur="validatePassword()">
+    <span id="passwordError" class="error">Password must be 8-20 characters long</span>
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    <br><br/>
+
+    <input type="submit" value="Submit">
+  </form>
+  <a href="/admin">
+    <button>Back to the dashboard</button>
+  </a>
+
+  <script>
+    function validateUserId() {
+      const userId = document.getElementById('userId').value;
+      const userIdError = document.getElementById('userIdError');
+      if (userId.length < 8 || userId.length > 10) {
+        userIdError.style.display = 'inline';
+      } else {
+        userIdError.style.display = 'none';
+      }
+    }
+
+    function validatePassword() {
+      const password = document.getElementById('password').value;
+      const passwordError = document.getElementById('passwordError');
+      if (password.length < 8 || password.length > 20) {
+        passwordError.style.display = 'inline';
+      } else {
+        passwordError.style.display = 'none';
+      }
+    }
+
+    function validateForm() {
+      validateUserId();
+      validatePassword();
+
+      const errors = document.querySelectorAll('.error');
+      for (let i = 0; i < errors.length; i++) {
+        if (errors[i].style.display === 'inline') {
+          return false;
+        }
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>

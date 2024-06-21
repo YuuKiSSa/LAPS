@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Application</title>
+    <script src="/JavaScript/app-research-script.js"></script>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Application</h1>
+    <p>You can input the application ID, ID of applicant, Name of applicant</p>
+    <form th:action="@{/admin/appSearch}" method="post">
+        <label for="query">Search:</label>
+        <input type="text" id="query" name="query" th:value="${query}"><br>
+        <input type="submit" value="search">
+    </form>
+
+    <!-- 检查是否有搜索结果 -->
+    <div th:if="${applications != null}">
+        <div th:if="${#lists.isEmpty(applications)}">
+            <p class="error">No related application</p>
+        </div>
+        <div th:if="${!#lists.isEmpty(applications)}">
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>User</th>
+                    <th>Description</th>
+                    <th>Start_time</th>
+                    <th>End_time</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+                <!-- 使用Thymeleaf语法遍历展示申请信息 -->
+                <tr th:each="app : ${applications}">
+                    <form th:action="@{/admin/appSearch/edit}" method="post">
+                        <td>
+                            <input type="text" name="id" id="id" th:value="${app.id}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" name="staff" id="staff" th:value="${app.staff.userId}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" name="description" th:value="${app.description}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" name="startTime" th:value="${app.startTime}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" name="endTime" th:value="${app.endTime}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" name="status" th:value="${app.status}" readonly>
+                        </td>
+                        <td>
+                            <input type="hidden" name="applicationType.id" th:value="${app.applicationType.id}">
+                            <input type="hidden" name="applicationType.type" th:value="${app.applicationType.type}">
+                            <input type="text" name="applicationTypeDisplay" th:value="${app.applicationType.type}" readonly>
+                        </td>
+                        <td>
+                            <button type="button" onclick="enableEdit(this)">Edit</button>
+                            <button type="submit">Save</button>
+                        </td>
+                    </form>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <a href="/admin">
+        <button>Back to the dashboard</button>
+    </a>
+</body>
+</html>

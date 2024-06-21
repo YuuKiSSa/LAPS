@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Search Admin</title>
+</head>
+<body>
+    <h1>Search Admin</h1>
+    <form action="#" th:action="@{/admin/Asearch}" method="post">
+		<p>Please input Admin_id:</p>
+        <label for="id">Search:</label>
+        <input type="text" id="id" name="id" th:value="${id}"><br>
+        <input type="submit" value="search">
+    </form>
+	<a href="/admin">
+	  <button>Back to the dashboard</button>
+	</a>
+</body>
+</html>
