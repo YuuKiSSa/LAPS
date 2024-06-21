@@ -1,6 +1,9 @@
 package sg.edu.nus.spring_laps.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sg.edu.nus.spring_laps.model.Application;
 import sg.edu.nus.spring_laps.model.Staff;
@@ -24,9 +27,10 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<Application> getApplicationsForManager(int hierarchy, int departmentId) {
+    public Page<Application> getApplicationsForManager(int hierarchy, int departmentId,int page,int size) {
+    	Pageable pageable = PageRequest.of(page, size);
         int subordinateHierarchy = hierarchy - 1;
-        return applicationRepository.findByStaff_HierarchyAndStaff_Department_Id(subordinateHierarchy, departmentId);
+        return applicationRepository.findByStaff_HierarchyAndStaff_Department_Id(subordinateHierarchy, departmentId,pageable);
     }
 
     @Override
@@ -53,7 +57,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.findById(applicationId);
     }
     @Override
-    public List<Application> getApplicationsForSubordinates(List<Staff> subordinates) {
-        return applicationRepository.findByStaffIn(subordinates);
+    public Page<Application> getApplicationsForSubordinates(List<Staff> subordinates,int page,int size) {
+    	Pageable pageable = PageRequest.of(page, size);
+        return applicationRepository.findByStaffIn(subordinates,pageable);
     }
 }

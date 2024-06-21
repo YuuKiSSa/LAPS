@@ -6,13 +6,15 @@ import sg.edu.nus.spring_laps.model.Staff;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+
 public interface ApplicationService {
     List<Application> getApplicationsForManager(int managerHierarchy);
     void approveApplication(Long applicationId);
     void rejectApplication(Long applicationId, String comment);
     void saveApplication(Application application); // 添加一个保存方法，以便处理新的字段
-	List<Application> getApplicationsForManager(int hierarchy, int departmentId);
+	Page<Application> getApplicationsForManager(int hierarchy, int departmentId,int page,int size);
 	Optional<Application> findById(Long applicationId);
-	public List<Application> getApplicationsForSubordinates(List<Staff> subordinates);
+	public Page<Application> getApplicationsForSubordinates(List<Staff> subordinates,int page,int size);
 	
 }

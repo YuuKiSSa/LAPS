@@ -1,6 +1,7 @@
 package sg.edu.nus.spring_laps.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,36 +47,21 @@ public class ManagerController {
     @Autowired
     private StaffService staffService;
     @GetMapping("/applications/{userId}")
-    public String viewApplications(@PathVariable String userId, Model model) {
+    public String viewApplications(@PathVariable String userId, Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
-        List<Application> applications = applicationService.getApplicationsForManager(manager.getHierarchy(), manager.getDepartment().getId());
+        Page<Application> applications = applicationService.getApplicationsForManager(manager.getHierarchy(), manager.getDepartment().getId(),page,size);
         List<Application> filteredApplications = applications.stream()
         	    .filter(application -> "Applied".equals(application.getStatus())|| "Updated".equals(application.getStatus()))
         	    .collect(Collectors.toList());
         Map<Staff, List<Application>> applicationsByStaff = filteredApplications.stream().collect(Collectors.groupingBy(Application::getStaff));
         model.addAttribute("applicationsByStaff", applicationsByStaff);
         model.addAttribute("userId", userId);  // 传递 userId 以便在重定向时使用
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", applications.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "manager/applications";
     }
 
-    /*@GetMapping("/application/{userId}/{applicationId}/details")
-    public String viewApplicationDetails(@PathVariable String userId, @PathVariable Long applicationId, Model model) {
-        Optional<Application> applicationOpt = applicationService.findById(applicationId);
-        if (applicationOpt.isPresent()) {
-            Application application = applicationOpt.get();
-            if (application.getStaff() != null) {
-                model.addAttribute("application", application);
-                model.addAttribute("userId", userId);
-                return "manager/applicationDetails";
-            } else {
-                // Handle case where staff is null
-                model.addAttribute("error", "Staff information is missing for this application.");
-                return "error/500";
-            }
-        } else {
-            // Handle case where application is not found
-            return "error/404";
-        }*/
     
     @GetMapping("/application/{userId}/{applicationId}/details")
     public String viewApplicationDetails(@PathVariable String userId, @PathVariable Long applicationId, Model model) {
@@ -86,12 +72,15 @@ public class ManagerController {
         }
 
     @GetMapping("/subordinates/{userId}/history")
-    public String viewSubordinatesHistory(@PathVariable String userId, Model model) {
+    public String viewSubordinatesHistory(@PathVariable String userId, Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
         List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy(),manager.getDepartment().getId());
-        List<Application> applications = applicationService.getApplicationsForSubordinates(subordinates);
+        Page<Application> applications = applicationService.getApplicationsForSubordinates(subordinates,page,size);
         model.addAttribute("applications", applications);
         model.addAttribute("userId", userId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", applications.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "manager/subordinatesHistory";
     }
     

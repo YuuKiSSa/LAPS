@@ -59,6 +59,7 @@
 	        <button type="submit">Generate Report</button>
 	    </form>
 <h2>Pending Leave Applications</h2>
+<input type="hidden" id="pageSize" value="20"/>
 <div th:each="entry : ${applicationsByStaff}">
     <h2 th:text="${entry.key.name}">Staff Name</h2>
     <table>
@@ -94,6 +95,12 @@
         </tbody>
     </table>
 </div>
+<div>
+    <button th:if="${currentPage > 0}" th:onclick="|window.location.href='@{/manager/applications/{userId}(userId=${userId}, page=${currentPage - 1}, size=${pageSize})}'|">Previous</button>
+    <span th:text="'Page ' + (${currentPage} + 1) + ' of ' + ${totalPages}">Page 1 of 1</span>
+    <button th:if="${currentPage < totalPages - 1}" th:onclick="|window.location.href='@{/manager/applications/{userId}(userId=${userId}, page=${currentPage + 1}, size=${pageSize})}'|">Next</button>
+</div>
+
 <a th:href="@{/home/{userId}(userId=${userId})}">Back to Home</a>
 </body>
 </html>
