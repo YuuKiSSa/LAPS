@@ -39,5 +39,10 @@ public class StaffServiceImpl implements StaffService {
     public List<Staff> getSubordinates(int departmentId,int managerHierarchy) {
         return staffRepository.findByDepartmentIdAndHierarchyLessThan(departmentId,managerHierarchy);
     }
+    
+    @Override
+    public List<Staff> findHigherManagers(Staff staff) {
+        return staffRepository.findByDepartmentAndHierarchyGreaterThan(staff.getDepartment(), staff.getHierarchy());
+    }
 
 }

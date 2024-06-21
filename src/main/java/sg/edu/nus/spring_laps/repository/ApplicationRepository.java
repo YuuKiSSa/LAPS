@@ -44,4 +44,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     @Query("select a from Application a where a.staff.name= :query")
     public List<Application> findApplicationByName(String query);
+    
+//    Page<Application> findByStaffIn(List<Staff> staff, Pageable pageable);
 }

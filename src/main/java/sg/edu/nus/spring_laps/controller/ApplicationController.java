@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import sg.edu.nus.spring_laps.model.*;
 import sg.edu.nus.spring_laps.service.ApplicationService;
+import sg.edu.nus.spring_laps.service.EmailService;
 import sg.edu.nus.spring_laps.service.PublicHolidayService;
 import sg.edu.nus.spring_laps.service.StaffService;
 
@@ -31,6 +32,9 @@ public class ApplicationController {
     @Autowired
     PublicHolidayService publicHolidayService;
 
+    @Autowired
+    EmailService emailService;
+    
     @GetMapping("/")
     public String staffDashboard(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
@@ -101,7 +105,6 @@ public class ApplicationController {
             }
         }
         Staff staff = staffService.findByUserId(applicationForm.getUserId());
-
         String type = applicationForm.getApplicationType();
         LocalDateTime startTime = applicationForm.getStartTime();
         String selectTime = applicationForm.getSelectTime();
@@ -132,6 +135,14 @@ public class ApplicationController {
         }
         savedApplication.setDescription(reason);
         Application newApplication = applicationService.saveApplication(savedApplication);
+        
+     // 发送邮件通知给上级管理者
+        List<Staff> higherManagers = staffService.findHigherManagers(staff);
+        String emailContent = "A new leave application has been submitted by " + staff.getName() + ". Please review it at your earliest convenience.";
+        for (Staff manager : higherManagers) {
+            emailService.sendSimpleMessage(manager.getEmail(), "New Leave Application", emailContent);
+        }
+        
         session.setAttribute("applicationId", newApplication.getId());
         return "redirect:/staffDashboard/displayApplication";
     }
@@ -274,13 +285,26 @@ public class ApplicationController {
         if (application == null) {
             return "staff/application-error";
         }
+        Staff staff = application.getStaff();
         String status = application.getStatus();
+        boolean isCancelled = false;
         if (status.equals("Approved")) {
             application.setStatus("Cancel");
+            isCancelled = true;
+            
         }else{
             application.setStatus("Deleted");
         }
         applicationService.saveApplication(application);
+        
+     // Send email notification to higher managers
+        List<Staff> higherManagers = staffService.findHigherManagers(staff);
+        String emailContent = "The leave application submitted by " + staff.getName();
+        emailContent += isCancelled ? " has been cancelled." : " has been deleted.";
+        for (Staff manager : higherManagers) {
+            emailService.sendSimpleMessage(manager.getEmail(), "Leave Application Notification", emailContent);
+        }
+        
         session.setAttribute("applicationId", applicationId);
         return "redirect:/staffDashboard/displayApplication";
     }

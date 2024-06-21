@@ -26,6 +26,8 @@ public interface StaffRepository extends JpaRepository<Staff, String> {
 
     @Query("SELECT distinct s.hierarchy FROM Staff s")
     public List<Integer> findAllHierarchy();
+    
+    List<Staff> findByDepartmentAndHierarchyGreaterThan(Department department, int hierarchy);
 
     @Modifying
     @Transactional

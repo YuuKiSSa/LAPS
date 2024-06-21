@@ -124,6 +124,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         // TODO Auto-generated method stub
         return applicationRepository.findAll();
     }
+    
+//    @Override
+//    public Page<Application> getApplicationsForSubordinates(List<Staff> subordinates, Pageable pageable) {
+//        return applicationRepository.findByStaffIn(subordinates, pageable);
+//    }
 
     public void updateApplication(Application application) {
         ApplicationType applicationType = applicationTypeRepository.findById(application.getApplicationType().getId()).orElse(null);

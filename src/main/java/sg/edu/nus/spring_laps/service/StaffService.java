@@ -6,8 +6,13 @@ import sg.edu.nus.spring_laps.model.Staff;
 import java.util.List;
 
 public interface StaffService {
-    Staff findByUserId(String userId);
-    Admin authenticateAdmin(String userId, String password);
-    Staff authenticateStaff(String userId, String password);
-    List<Staff> getSubordinates(int managerHierarchy,int departmentId);
+	Staff findByUserId(String userId);
+
+	Admin authenticateAdmin(String userId, String password);
+
+	Staff authenticateStaff(String userId, String password);
+
+	List<Staff> getSubordinates(int managerHierarchy, int departmentId);
+
+	List<Staff> findHigherManagers(Staff staff);
 }
