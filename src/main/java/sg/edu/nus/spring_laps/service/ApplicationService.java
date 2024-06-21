@@ -31,7 +31,7 @@ public interface ApplicationService {
 
 	List<Application> getApplicationsForManager(int hierarchy, int departmentId);
 
-	List<Application> getApplicationsForSubordinates(List<Staff> subordinates);
+	Page<Application> getApplicationsForSubordinates(List<Staff> subordinates,int page,int size);
 
 	void approveApplication(Long applicationId);
 

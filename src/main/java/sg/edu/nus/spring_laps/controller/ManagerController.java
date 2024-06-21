@@ -74,39 +74,22 @@ public class ManagerController {
 		return "manager/application-details";
 	}
 
+
     @GetMapping("/subordinates/{userId}/history")
-    public String viewSubordinatesHistory(@PathVariable String userId, Model model) {
+    public String viewSubordinatesHistory(@PathVariable String userId, Model model,@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
         List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy(),manager.getDepartment().getId());
-        List<Application> applications = applicationService.getApplicationsForSubordinates(subordinates);
+        Page<Application> applications = applicationService.getApplicationsForSubordinates(subordinates,page,size);
         model.addAttribute("applications", applications);
         model.addAttribute("userId", userId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", applications.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "manager/subordinates-history";
     }
-//	@GetMapping("/subordinates/{userId}/history")
-//	public String viewSubordinatesHistory(@PathVariable String userId, @RequestParam(defaultValue = "0") int page, Model model) {
-//	    Staff manager = staffRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID: " + userId));
-//	    List<Staff> subordinates = staffService.getSubordinates(manager.getHierarchy(), manager.getDepartment().getId());
-//	    
-//	    Pageable pageable = PageRequest.of(page, 15);  // 每页显示15条记录
-//	    Page<Application> applicationsPage = applicationService.getApplicationsForSubordinates(subordinates, pageable);
-//	    
-//	    model.addAttribute("applicationsPage", applicationsPage);
-//	    model.addAttribute("userId", userId);
-//	    return "manager/subordinates-history";
-//	}
+    
 
 
-//	@PostMapping("/applications/{id}/approve")
-//	public String approveApplication(@PathVariable Long id, @RequestParam String userId) {
-//		applicationService.approveApplication(id);
-//		Application application = applicationService.findApplicationById(id);
-//		String loginLink = "http://localhost:8080/login"; // 替换为你的实际登录页面URL
-//		String emailContent = "Your leave application has been approved. You can view the details and comments by logging in here: "
-//				+ loginLink;
-//		emailService.sendSimpleMessage(application.getStaff().getEmail(), "Leave Application Approved", emailContent);
-//		return "redirect:/manager/applications/" + userId;
-//	}
     @PostMapping("/applications/{id}/approve")
     public String approveApplication(@PathVariable Long id, @RequestParam String userId) {
         applicationService.approveApplication(id);

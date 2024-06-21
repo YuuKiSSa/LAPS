@@ -2,6 +2,7 @@ package sg.edu.nus.spring_laps.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,10 +74,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.findByStaff_HierarchyAndStaff_Department_Id(subordinateHierarchy, departmentId);
     }
     @Override
-    public List<Application> getApplicationsForSubordinates(List<Staff> subordinates) {
-        return applicationRepository.findByStaffIn(subordinates);
-    }
-    @Override
     public void approveApplication(Long applicationId) {
         Application application = applicationRepository.findById(applicationId).orElseThrow();
         application.setStatus("Approved");
@@ -125,10 +122,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.findAll();
     }
     
-//    @Override
-//    public Page<Application> getApplicationsForSubordinates(List<Staff> subordinates, Pageable pageable) {
-//        return applicationRepository.findByStaffIn(subordinates, pageable);
-//    }
+    @Override
+    public Page<Application> getApplicationsForSubordinates(List<Staff> subordinates,int page,int size) {
+    	Pageable pageable = PageRequest.of(page, size);
+        return applicationRepository.findByStaffIn(subordinates,pageable);
+    }
 
     public void updateApplication(Application application) {
         ApplicationType applicationType = applicationTypeRepository.findById(application.getApplicationType().getId()).orElse(null);
