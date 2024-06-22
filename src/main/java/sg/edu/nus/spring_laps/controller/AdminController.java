@@ -171,6 +171,8 @@ public class AdminController {
     @PostMapping("/create")    //保存员工
     public String saveStaff(@ModelAttribute("staff") Staff staff,
                             BindingResult bindingResult, Model model) {
+        staff.setEntitle(staff.getDepartment().getAnnualLeave());
+        staff.setStatus(true);
         if (bindingResult.hasErrors()) {
             return "admin/createStaff";
         }

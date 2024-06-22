@@ -42,7 +42,7 @@ import sg.edu.nus.spring_laps.service.StaffService;
 				if (role.equals("Manager") && staff.getHierarchy() >= 1) {
 					return "manager/manager-home";
 				} else if (role.equals("Employee")) {
-					return "redirect:/staffDashboard/";
+					return "redirect:/staffDashboard";
 				}
 			}
 		}

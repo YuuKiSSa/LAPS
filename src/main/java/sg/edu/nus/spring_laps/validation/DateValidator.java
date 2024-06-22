@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import sg.edu.nus.spring_laps.model.ApplicationForm;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DateValidator implements ConstraintValidator<ValidRangeDate, ApplicationForm> {
@@ -18,7 +19,15 @@ public class DateValidator implements ConstraintValidator<ValidRangeDate, Applic
             return true;
         }
         if(form.getApplicationType().equals("Compensation Leave")){
-            return true;
+            LocalDate startDate = startTime.toLocalDate();
+            LocalDate endDate = endTime.toLocalDate();
+            if (!startDate.equals(endDate)){
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("Compensation leave should be in one day.").addConstraintViolation();
+                return false;
+            }else{
+                return startTime.isAfter(LocalDateTime.now());
+            }
         }
         if (startTime.equals(endTime)){
             return true;

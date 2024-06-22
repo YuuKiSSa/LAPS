@@ -17,6 +17,7 @@ public class Staff {
     private String email;
     private boolean status;
     private int hierarchy;
+    private int entitle;
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false, foreignKey = @ForeignKey(name = "department_id"))
     private Department department;
@@ -65,12 +66,20 @@ public class Staff {
         this.email = email;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return this.status;
     }
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public int getEntitle() {
+        return entitle;
+    }
+
+    public void setEntitle(int entitle) {
+        this.entitle = entitle;
     }
 
     public Department getDepartment() {

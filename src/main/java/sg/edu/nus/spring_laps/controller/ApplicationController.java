@@ -35,7 +35,7 @@ public class ApplicationController {
     @Autowired
     EmailService emailService;
     
-    @GetMapping("/")
+    @GetMapping
     public String staffDashboard(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
         if (userId == null) {
@@ -56,21 +56,23 @@ public class ApplicationController {
         }else{
             applicationForm.setUserId(session.getAttribute("userId").toString());
         }
+        Staff staff = staffService.findByUserId(session.getAttribute("userId").toString());
+        if (!staff.getStatus()){
+            return "staff/not-allow-apply";
+        }
         ApplicationType applicationType = applicationService.findApplicationTypeById(type);
         model.addAttribute("applicationType", applicationType);
         String appTypeName = applicationType.getType();
         applicationForm.setApplicationType(appTypeName);
 
         model.addAttribute("applicationForm", applicationForm);
-        Staff staff = staffService.findByUserId(session.getAttribute("userId").toString());
-        model.addAttribute("annualLeaveDays", staff.getDepartment().getAnnualLeave());
 
         if (appTypeName.equals("Compensation Leave")){
             long time = compensationTime(staff);
             model.addAttribute("compensationHours", time);
             model.addAttribute("compensationTimes", time/4);
         } else if (appTypeName.equals("Annual Leave")) {
-            int annualLeaveDays = staff.getDepartment().getAnnualLeave();
+            int annualLeaveDays = staff.getEntitle();
             model.addAttribute("annualLeaveDays", annualLeaveDays);
             int annualLeaveDaysLeft = calAnnualLeaveDaysLeft(annualLeaveDays, staff);
             model.addAttribute("annualLeaveDaysLeft", annualLeaveDaysLeft);
@@ -86,25 +88,35 @@ public class ApplicationController {
 
     @PostMapping("/createApplication")
     public String createApplication(@Valid @ModelAttribute("applicationForm") ApplicationForm applicationForm,
-                                    BindingResult bindingResult,Model model,
+                                    BindingResult bindingResult, Model model,
                                     HttpSession session) {
+        Staff staff = staffService.findByUserId(applicationForm.getUserId());
+        String appTypeName = applicationForm.getApplicationType();
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("fieldErrors", bindingResult.getFieldErrors());
             model.addAttribute("globalErrors", bindingResult.getGlobalErrors());
-            switch (applicationForm.getApplicationType()) {
-                case "Annual Leave":
-                    return "staff/annual-leave";
-                case "Medical Leave":
-                    return "staff/medical-leave";
-                case "Compensation Leave":
-                    return "staff/compensation-leave";
-                case "Compensation":
-                    return "staff/compensation";
-                default:
-                    return "staff/create-application";
+
+            if (appTypeName.equals("Annual Leave")) {
+                int annualLeaveDays = staff.getEntitle();
+                model.addAttribute("annualLeaveDays", annualLeaveDays);
+                int annualLeaveDaysLeft = calAnnualLeaveDaysLeft(annualLeaveDays, staff);
+                model.addAttribute("annualLeaveDaysLeft", annualLeaveDaysLeft);
+                return "staff/annual-leave";
+            } else if (appTypeName.equals("Compensation Leave")) {
+                long time = compensationTime(staff);
+                model.addAttribute("compensationHours", time);
+                model.addAttribute("compensationTimes", time / 4);
+                return "staff/compensation-leave";
+            } else if (appTypeName.equals("Medical Leave")) {
+                return "staff/medical-leave";
+            } else if (appTypeName.equals("Compensation")) {
+                return "staff/compensation";
+            } else {
+                return "staff/create-application";
             }
         }
-        Staff staff = staffService.findByUserId(applicationForm.getUserId());
+
         String type = applicationForm.getApplicationType();
         LocalDateTime startTime = applicationForm.getStartTime();
         String selectTime = applicationForm.getSelectTime();
@@ -116,33 +128,31 @@ public class ApplicationController {
         savedApplication.setStatus("Applied");
         ApplicationType applicationType = applicationService.findApplicationTypeByName(type);
         savedApplication.setApplicationType(applicationType);
-        if(!type.equals("Compensation")){
-            if(selectTime != null){
+        if (!type.equals("Compensation")) {
+            if (selectTime != null) {
                 if (selectTime.equals("Morning")) {
                     savedApplication.setStartTime(startTime.plusHours(9));
                     savedApplication.setEndTime(endTime.plusHours(13));
-                }else{
+                } else {
                     savedApplication.setStartTime(startTime.plusHours(13));
                     savedApplication.setEndTime(endTime.plusHours(17));
                 }
-        }else{
+            } else {
                 savedApplication.setStartTime(startTime.plusHours(9));
                 savedApplication.setEndTime(endTime.plusHours(17));
-             }
-        }else{
+            }
+        } else {
             savedApplication.setStartTime(startTime);
             savedApplication.setEndTime(endTime);
         }
         savedApplication.setDescription(reason);
         Application newApplication = applicationService.saveApplication(savedApplication);
-        
-     // 发送邮件通知给上级管理者
+        // 发送邮件通知给上级管理者
         List<Staff> higherManagers = staffService.findHigherManagers(staff);
         String emailContent = "A new leave application has been submitted by " + staff.getName() + ". Please review it at your earliest convenience.";
         for (Staff manager : higherManagers) {
             emailService.sendSimpleMessage(manager.getEmail(), "New Leave Application", emailContent);
         }
-        
         session.setAttribute("applicationId", newApplication.getId());
         return "redirect:/staffDashboard/displayApplication";
     }
