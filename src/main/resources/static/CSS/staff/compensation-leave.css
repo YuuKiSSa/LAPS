@@ -1,0 +1,100 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('/picture/normal.png') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    color: #ffffff;
+    position: relative;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+h3 {
+    font-size: 14px; /* 调整字号为 16px */
+    color: #ffffff; /* 设置字体颜色为白色 */
+}
+
+h3:nth-child(3) {
+    color:yellow; /* 设置第二行字体颜色为红色 */
+}
+
+.container {
+    width: 400px;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.container h2 {
+    text-align: center;
+    color: #ffffff;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: #ffffff;
+    margin-top: 10px;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #0d47a1;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #1565c0;
+}
+
+.error {
+    color: #d32f2f;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.error-messages {
+    color: #d32f2f;
+    margin-top: 10px;
+}
+
+.error-messages ul {
+    padding-left: 20px;
+}

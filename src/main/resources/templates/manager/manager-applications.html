@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manager Applications</title>
+	<link rel="stylesheet" href="/CSS/manager-applications.css">
+</head>
+<body>
+	<header>
+		<h1>Manager Dashboard</h1>	
+	</header>
+	<div class="container">
+	<h2>Generate Leave Report</h2>
+	    <form action="/manager/report/leave" method="get">
+	        <label for="startTime">Start Time:</label>
+	        <input type="date" id="startTime" name="startTime" required>
+	        <label for="endTime">End Time:</label>
+	        <input type="date" id="endTime" name="endTime" required>
+	        <label for="applicationType">Type:</label>
+	        <select id="applicationType" name="applicationType">
+	            <option value="Annual Leave">Annual</option>
+	            <option value="Compensation Leave">Compensation</option>
+	            <option value="Medical Leave">Medical</option>
+	            <option value="All">All</option>
+	        </select>
+	        <button type="submit">Generate Report</button>
+	    </form>
+
+	    <h2>Generate Compensation Report</h2>
+	    <form action="/manager/report/compensation" method="get">
+	        <label for="userId">UserID (optional):</label>
+	        <input type="text" id="userId" name="userId">
+	        <button type="submit">Generate Report</button>
+	    </form>
+<h2>Pending Leave Applications</h2>
+<div th:each="entry : ${applicationsByStaff}">
+    <h2 th:text="${entry.key.name}">Staff Name</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+			<tr th:each="app : ${entry.value}" >
+			               <td th:text="${app.applicationType.type}">Leave Type</td>
+			               <td th:text="${#temporals.format(app.startTime, 'yyyy-MM-dd HH:mm')}">Start Date</td>
+			               <td th:text="${#temporals.format(app.endTime, 'yyyy-MM-dd HH:mm')}">End Date</td>
+			               <td th:text="${app.status}">Status</td>
+						 
+			               <td><a th:href="@{/manager/application/{userId}/{applicationId}/details(userId=${userId}, applicationId=${app.id})}">View Details</a>
+			               <form th:action="@{/manager/applications/{id}/approve(id=${app.id})}" method="post">
+			                       <input type="hidden" name="userId" th:value="${userId}"/>
+			                       <button type="submit">Approve</button>
+			                   </form>
+			                   <form th:action="@{/manager/applications/{id}/reject(id=${app.id})}" method="post">
+			                       <input type="text" name="comment" placeholder="Comment" required>
+			                       <input type="hidden" name="userId" th:value="${userId}"/>
+			                       <button type="submit">Reject</button>
+			                   </form>
+							   </td>
+			               </td>
+			           </tr>
+        </tbody>
+    </table>
+ </div>
+</div>
+<a th:href="@{/manager/home/{userId}(userId=${userId})}">Back to Home</a>
+</body>
+</html>

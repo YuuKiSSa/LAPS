@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Application Details</title>
+</head>
+<body>
+    <h1>Application Details</h1>
+    <div>
+		<p>Name: <span th:text="${app.staff.name}"></span></p>
+		<p>Leave Type: <span th:text="${app.applicationType.type}"></span></p>
+		<p>Start Date:  <span th:text="${#temporals.format(app.startTime, 'yyyy-MM-dd HH:mm')}"></span></p>
+		<p>End Date: <span th:text="${#temporals.format(app.endTime, 'yyyy-MM-dd HH:mm') }"></span></p>
+		<p>Reason: <span th:text="${app.description}"></span></p>
+		<p>Status:<span th:text="${app.status}"></span></p>
+
+    </div>
+    <p><a th:href="@{/manager/applications/{userId}(userId=${userId})}">Back to Applications</a></p>
+	<a th:href="@{/manager/home/{userId}(userId=${userId})}">Back to Home</a>
+</body>
+
+</html>
+
