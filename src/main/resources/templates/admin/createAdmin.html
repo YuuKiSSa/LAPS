@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <meta charset="UTF-8">
   <title>Create Admin</title>
+  <link rel="stylesheet" href="/CSS/admin/createAdmin.css">
 </head>
 <body>
+<div class="header">
   <h1>Create Admin</h1>
-
+</div>
+<div class="content">
   <form action="/admin/Acreate" method="post" th:object="${admin}">
     <label for="userId">User ID:</label>
     <input type="text" id="userId" th:field="*{userId}">
-	<span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span><br/><br/>
+    <span th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}"></span><br><br>
 
     <label for="password">Password:</label>
     <input type="password" id="password" th:field="*{password}">
-	<span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span><br/><br/>
+    <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span><br><br>
 
     <input type="submit" value="Submit">
   </form>
-  <a href="/admin">
-    <button>Back to the dashboard</button>
-  </a>
+  <div class="button-container">
+    <a href="/admin">
+      <button>Back to the dashboard</button>
+    </a>
+  </div>
+</div>
 </body>
 </html>

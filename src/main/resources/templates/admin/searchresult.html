@@ -1,73 +1,76 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Search Staff/Manager</title>
-	<script src="/JavaScript/search-result-script.js"></script>
+    <script src="/JavaScript/search-result-script.js"></script>
+    <link rel="stylesheet" href="/CSS/admin/searchresult.css">
 </head>
 <body>
+<div class="header">
     <h1>Search Staff/Manager</h1>
+</div>
+<div class="content">
     <form action="#" th:action="@{/admin/search/searching}" method="post">
         <label for="query">Search:</label>
         <input type="text" id="query" name="query" th:value="${query}"><br>
-        <input type="submit" value="search">
+        <input type="submit" value="Search">
     </form>
 
     <!-- 检查是否有搜索结果 -->
     <div th:if="${staff != null}">
-        <div th:if="${#lists.isEmpty(staff)}">
-            <p class="error">No related staff</p>
-        </div>
-        <div th:if="${!#lists.isEmpty(staff)}">
-            <table>
-                <tr>
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Hierarchy</th>
-                    <th>Department</th>
-                    <th>Leave Entitlements</th>
-                    <th>Actions</th>
-                </tr>
-                <!-- 使用Thymeleaf语法遍历展示员工信息 -->
-                <tr th:each="staff : ${staff}">
-                    <form th:action="@{/admin/department/edit}" method="post">
-                        <td>
-                            <input type="text" name="userId" id="userId" th:value="${staff.userId}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="name" th:value="${staff.name}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="email" th:value="${staff.email}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="hierarchy" th:value="${staff.hierarchy}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="department.name" th:value="${staff.department.name}" readonly>
-                        </td>
-                        <td>
-                            <input type="hidden" name="password" th:value="${staff.password}">
-                            <input type="hidden" name="status" th:value="${staff.status}">
-                            <input type="text" name="entitle" th:value="${staff.entitle}" readonly>
-                        </td>
-                        <td>
-                            <button type="button" onclick="enableEdit(this)">Edit</button>
-                            <button type="submit">Save</button>
-                        </td>
-                    </form>
+        <table>
+            <tr>
+                <th>User ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Hierarchy</th>
+                <th>Department</th>
+                <th>Leave Entitlements</th>
+                <th>Actions</th>
+            </tr>
+            <!-- 使用Thymeleaf语法遍历展示员工信息 -->
+            <tr th:each="staff : ${staff}">
+                <form th:action="@{/admin/department/edit}" method="post">
                     <td>
-                        <form th:action="@{/admin/search/searching/delete}" method="post">
-                            <input type="hidden" name="userId" th:value="${staff.userId}">
-                            <button type="submit">Delete</button>
-                        </form>
+                        <input type="text" name="userId" id="userId" th:value="${staff.userId}" readonly>
                     </td>
-                </tr>
-            </table>
-        </div>
+                    <td>
+                        <input type="text" name="name" th:value="${staff.name}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="email" th:value="${staff.email}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="hierarchy" th:value="${staff.hierarchy}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="department.name" th:value="${staff.department.name}" readonly>
+                    </td>
+                    <td>
+                        <input type="hidden" name="password" th:value="${staff.password}">
+                        <input type="hidden" name="status" th:value="${staff.status}">
+                        <input type="text" name="entitle" th:value="${staff.entitle}" readonly>
+                    </td>
+                    <td>
+                        <button type="button" onclick="enableEdit(this)">Edit</button>
+                        <button type="submit">Save</button>
+                    </td>
+                </form>
+                <td>
+                    <form th:action="@{/admin/search/searching/delete}" method="post">
+                        <input type="hidden" name="userId" th:value="${staff.userId}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
     </div>
-	<a href="/admin">
-	  <button>Back to the dashboard</button>
-	</a>
+    <div class="button-container">
+        <a href="/admin">
+            <button>Back to the dashboard</button>
+        </a>
+    </div>
+</div>
 </body>
 </html>

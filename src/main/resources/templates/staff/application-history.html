@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Application History</title>
-    <link rel="stylesheet" href="/CSS/application-history.css">
+    <link rel="stylesheet" href="/CSS/staff/application-history.css">
 </head>
 <body>
 <header>
@@ -31,7 +29,7 @@
         </thead>
         <tbody>
         <tr th:each="app : ${applications}">
-            <td><a th:href="@{/staffDashboard/displayApplication(applicationId=${app.id})}" th:text="${app.id}"></a></td>
+            <td><a th:href="@{/staffDashboard/displayApplication(applicationId=${app.id})}" th:text="${app.id}"></a ></td>
             <td th:text="${app.applicationType.type}"></td>
             <td th:text="${app.startTime}"></td>
             <td th:text="${app.endTime}"></td>
@@ -43,16 +41,32 @@
 
     <div class="pagination">
         <span th:if="${currentPage > 0}">
-            <a th:href="@{/staffDashboard/history(page=${currentPage - 1}, size=10)}">&laquo; Previous</a>
+            <a th:href="@{/staffDashboard/history(page=${currentPage - 1}, size=10)}">&laquo; Previous</a >
         </span>
-        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-            <a th:if="${i != currentPage + 1}" th:href="@{/staffDashboard/history(page=${i - 1}, size=10)}" th:text="${i}"></a>
-            <span th:if="${i == currentPage + 1}" th:text="${i}"></span>
+        <span>
+            <a th:text="${currentPage + 1}"></a >
         </span>
         <span th:if="${currentPage < totalPages - 1}">
-            <a th:href="@{/staffDashboard/history(page=${currentPage + 1}, size=10)}">Next &raquo;</a>
+            <a th:href="@{/staffDashboard/history(page=${currentPage + 1}, size=10)}">Next &raquo;</a >
         </span>
+
+        <!-- Add form for inputting page number -->
+        <form id="pageForm" th:action="@{/staffDashboard/history}" method="get" class="page-form" onsubmit="adjustPageValue()">
+            <input type="number" id="pageInput" name="page" th:min="1" th:max="${totalPages}" th:value="${currentPage + 1}" required>
+            <input type="hidden" name="size" value="10">
+            <button type="submit">Go</button>
+        </form>
     </div>
 </div>
+
+<script>
+    function adjustPageValue() {
+        var pageInput = document.getElementById("pageInput");
+        var pageValue = parseInt(pageInput.value);
+        if (pageValue > 0) {
+            pageInput.value = pageValue - 1;
+        }
+    }
+</script>
 </body>
 </html>

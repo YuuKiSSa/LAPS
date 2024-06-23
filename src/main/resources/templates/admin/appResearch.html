@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Search Application</title>
+    <link rel="stylesheet" href="/CSS/admin/appResearch.css">
 </head>
 <body>
+<div class="header">
     <h1>Search Application</h1>
+</div>
+<div class="content">
     <p>You can input the application ID, ID of applicant, or Name of applicant</p>
     <form th:action="@{/admin/appSearch}" method="post">
         <label for="query">Search:</label>
         <input type="text" id="query" name="query" th:value="${query}"><br>
         <input type="submit" value="Search">
     </form>
-	<a href="/admin">
-	  <button>Back to the dashboard</button>
-	</a>
+    <div class="button-container">
+        <a href="/admin">
+            <button>Back to the dashboard</button>
+        </a>
+    </div>
+</div>
 </body>
 </html>

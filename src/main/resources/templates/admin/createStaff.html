@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <meta charset="UTF-8">
   <title>Create Staff/Manager</title>
+  <link rel="stylesheet" href="/CSS/admin/createStaff.css">
 </head>
 <body>
+<div class="header">
   <h1>Create Staff/Manager</h1>
-  
+</div>
+<div class="content">
   <div th:if="${errorMessage}" style="color: red;">
     <p th:text="${errorMessage}"></p>
   </div>
@@ -22,21 +26,24 @@
 
     <label for="email">Email:</label>
     <input type="email" id="email" th:field="*{email}"><br><br>
-    
+
     <label for="hierarchy">Hierarchy:</label>
     <select id="hierarchy" th:field="*{hierarchy}">
-        <option th:each="hierarchy : ${hierarchy}" th:value="${hierarchy}" th:text="${hierarchy}">hierarchy</option>
+      <option th:each="hierarchy : ${hierarchy}" th:value="${hierarchy}" th:text="${hierarchy}">hierarchy</option>
     </select><br><br>
 
     <label for="department">Department:</label>
     <select id="department" th:field="*{department}">
-        <option th:each="department : ${department}" th:value="${department.id}" th:text="${department.name}">department</option>
+      <option th:each="department : ${department}" th:value="${department.id}" th:text="${department.name}">department</option>
     </select><br><br>
 
     <input type="submit" value="Submit">
   </form>
-  <a href="/admin">
-    <button>Back to the dashboard</button>
-  </a>
+  <div class="button-container">
+    <a href="/admin">
+      <button>Back to the dashboard</button>
+    </a>
+  </div>
+</div>
 </body>
 </html>

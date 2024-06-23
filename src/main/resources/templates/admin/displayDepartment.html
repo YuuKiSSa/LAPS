@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>部门信息</title>
+  <link rel="stylesheet" href="/CSS/admin/displayDepartment.css">
 </head>
 <body>
-  <h1>The information of department</h1>
-
+<div class="header">
+  <h1>Department Information</h1>
+</div>
+<div class="content">
+  <p>You can view and manage department information here.</p>
   <table>
     <tr>
       <th>Department ID</th>
-      <th>Department name</th>
-      <th>Annual date</th>
-      <th>Operation</th>
+      <th>Department Name</th>
+      <th>Annual Leave</th>
+      <th>Actions</th>
     </tr>
     <!-- 使用 Thymeleaf 遍历部门列表 -->
     <tr th:each="dept : ${department}">
@@ -34,17 +39,21 @@
       </td>
     </tr>
   </table>
-
-  <script>
-    function enableEdit(button) {
-      // 获取当前行的输入字段
-      var inputField = button.parentNode.querySelector('input[name=annualLeave]');
-      // 移除只读属性，允许编辑
-      inputField.removeAttribute('readonly');
-    }
-  </script>
+</div>
+<div class="button-container">
   <a href="/admin">
     <button>Back to the dashboard</button>
   </a>
+</div>
+
+<script>
+  function enableEdit(button) {
+    // 获取当前行的输入字段
+    var inputField = button.parentNode.querySelector('input[name=annualLeave]');
+    // 移除只读属性，允许编辑
+    inputField.removeAttribute('readonly');
+  }
+</script>
+
 </body>
 </html>
