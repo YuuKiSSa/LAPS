@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Application History</title>
+    <link rel="stylesheet" href="/CSS/staff/application-history.css">
+</head>
+<body>
+	<header>
+	    <h1>Personal Application History</h1>
+	    <nav>
+	        <ul>
+				<li><a href="/staffDashboard/">Main</a></li>
+				<li><a href="/logout">Logout</a></li> 
+	        </ul>
+	    </nav>
+	</header>
+
+<div class="container">
+    <table>
+        <thead>
+        <tr>
+            <th>Application ID</th>
+            <th>Application Type</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Application Status</th>
+            <th>Reason</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="app : ${applications}">
+            <td><a th:href="@{/staffDashboard/displayApplication(applicationId=${app.id})}" th:text="${app.id}"></a ></td>
+            <td th:text="${app.applicationType.type}"></td>
+            <td th:text="${app.startTime}"></td>
+            <td th:text="${app.endTime}"></td>
+            <td th:text="${app.status}"></td>
+            <td th:text="${app.description}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span th:if="${currentPage > 0}">
+            <a th:href="@{/staffDashboard/history(page=${currentPage - 1}, size=10)}">&laquo; Previous</a >
+        </span>
+        <span>
+            <a th:text="${currentPage + 1}"></a >
+        </span>
+        <span th:if="${currentPage < totalPages - 1}">
+            <a th:href="@{/staffDashboard/history(page=${currentPage + 1}, size=10)}">Next &raquo;</a >
+        </span>
+
+        <!-- Add form for inputting page number -->
+        <form id="pageForm" th:action="@{/staffDashboard/history}" method="get" class="page-form" onsubmit="adjustPageValue()">
+            <input type="number" id="pageInput" name="page" min="0" th:max="${totalPages - 1}" th:value="${currentPage+1}" required>
+            <input type="hidden" name="size" value="10">
+            <button type="submit">Go</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function adjustPageValue() {
+        var pageInput = document.getElementById("pageInput");
+        var pageValue = parseInt(pageInput.value);
+        if (pageValue > 0) {
+            pageInput.value = pageValue - 1;
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Admin</title>
+	<link rel="stylesheet" href="/CSS/admin/adminResearch1.css">
+    <script src="/JavaScript/search-result-script.js"></script>
+</head>
+<body>
+<div class="header">
+    <h1>Search Admin</h1>
+</div>
+<div class="content">
+    <form action="#" th:action="@{/admin/Asearch}" method="post">
+        <p>Please input Admin_id:</p>
+        <label for="id">Search:</label>
+        <input type="text" id="id" name="id" th:value="${id}"><br>
+        <input type="submit" value="Search">
+    </form>
+
+    <!-- 检查是否有搜索结果 -->
+    <div th:if="${admin != null}" class="table-container">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Password</th>
+                <th>Actions</th>
+            </tr>
+            <!-- 使用Thymeleaf语法遍历展示员工信息 -->
+            <tr th:each="admin : ${admin}">
+                <form th:action="@{/admin/Asearch/edit}" method="post">
+                    <td>
+                        <input type="text" name="userId" id="userId" th:value="${admin.userId}" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="password" th:value="${admin.password}" readonly>
+                    </td>
+                    <td>
+                        <button type="button" onclick="enableEdit(this)">Edit</button>
+                        <button type="submit">Save</button>
+                    </td>
+                </form>
+                <td>
+                    <form th:action="@{/admin/Asearch/edit/delete}" method="post">
+                        <input type="hidden" name="userId" th:value="${admin.userId}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="button-container">
+        <a href="/admin">
+            <button>Back to the dashboard</button>
+        </a>
+    </div>
+</div>
+</body>
+</html>
