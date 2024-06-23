@@ -19,22 +19,22 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* Adjust the width as needed */
+    width: 100%;
     text-align: left;
-    z-index: 1; /* Ensure it's above other elements */
+    z-index: 1;
 }
 
 .user-info {
     position: absolute;
     top: 0;
-    right:30px;
+    right: 30px;
     padding: 20px;
     color: #ffffff;
 }
 
 nav {
-    width: 550px; /* Adjust the width as needed */
-    background-color: #ffffff;
+    width: auto; /* 自动调整宽度 */
+    background-color: rgba(255, 255, 255, 0.8); /* 半透明背景 */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 15px;
     display: flex;
@@ -43,6 +43,8 @@ nav {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    border-radius: 20px;
+    flex-wrap: wrap; /* 允许子元素换行 */
 }
 
 nav ul {
@@ -51,11 +53,12 @@ nav ul {
     margin: 0;
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
+    flex-wrap: wrap; /* 允许子元素换行 */
 }
 
 nav ul li {
-    margin: 0 20px;
+    margin: 10px;
 }
 
 nav ul li select,
@@ -71,15 +74,9 @@ nav ul li a {
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-}
-
-nav ul li select:hover,
-nav ul li a:hover {
-    background-color: #b3cde0;
-    color: #fff;
-    border-color: #b3cde0;
+    white-space: nowrap; /* 防止按钮文字换行 */
 }
 
 nav ul li select {
-    width: 250px;
+    width: auto; /* 根据内容自动调整宽度 */
 }

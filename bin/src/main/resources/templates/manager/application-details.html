@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>Application Details</title>
+	<link rel="stylesheet" href="/CSS/staff/1.css">
+</head>
+<body>
+<div class="header">
+	<h1>Application Details</h1>
+</div>
+<div class="container">
+	<h2>Application Information</h2>
+	<div class="application-details">
+		<div class="detail">
+			<span class="label">Name:</span>
+			<span th:text="${app.staff.name}"></span>
+		</div>
+		<div class="detail">
+			<span class="label">Leave Type:</span>
+			<span th:text="${app.applicationType.type}"></span>
+		</div>
+		<div class="detail">
+			<span class="label">Start Date:</span>
+			<span th:text="${#temporals.format(app.startTime, 'yyyy-MM-dd HH:mm')}"></span>
+		</div>
+		<div class="detail">
+			<span class="label">End Date:</span>
+			<span th:text="${#temporals.format(app.endTime, 'yyyy-MM-dd HH:mm')}"></span>
+		</div>
+		<div class="detail">
+			<span class="label">Reason:</span>
+			<span th:text="${app.description}"></span>
+		</div>
+		<div class="detail">
+			<span class="label">Status:</span>
+			<span th:text="${app.status}"></span>
+		</div>
+	</div>
+	<nav>
+		<ul>
+			<li>
+				<a class="button backButton" th:href="@{/manager/applications/{userId}(userId=${userId})}">Back to Applications</a>
+			</li>
+			<li>
+				<a class="button editButton" th:href="@{/manager/home/{userId}(userId=${userId})}">Back to Home</a>
+			</li>
+		</ul>
+	</nav>
+</div>
+</body>
+</html>

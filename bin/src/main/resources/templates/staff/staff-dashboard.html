@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/CSS/staff/staffDashboard.css">
+</head>
+<body>
+<header>
+    <div class="welcome-info">
+        <h1>Welcome, <span th:text="${staff.name}"></span>!</h1>
+        <div class="user-info">
+            <p>Your hierarchy: <span th:text="${staff.hierarchy}"></span></p>
+            <p>Email: <span th:text="${staff.email}"></span></p>
+        </div>
+    </div>
+    <nav>
+        <ul>
+            <select onchange="location = this.value;">
+                <option value="#" selected disabled hidden>Submit an application</option>
+                <option th:each="type : ${applicationTypes}"
+                        th:value="'/staffDashboard/createApplication?type=' + ${type.id}"
+                        th:text="${type.type}"></option>
+            </select>
+            <li><a href="/staffDashboard/history">View Leave History</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>
