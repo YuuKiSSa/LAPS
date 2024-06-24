@@ -1,5 +1,6 @@
 package sg.edu.nus.spring_laps.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;

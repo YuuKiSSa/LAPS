@@ -3,30 +3,39 @@ package sg.edu.nus.spring_laps.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private LocalDateTime startTime;
+
+    @Column(nullable = false)
     private LocalDateTime endTime;
-    @Column(length = 10)
+
+    @Column(length = 10, nullable = false)
     private String status;
+
     @Column(length = 1000)
     private String description;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "user_id"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_application_staff"))
     private Staff staff;
+
     @ManyToOne
-    @JoinColumn(name = "type_id", nullable = false, foreignKey = @ForeignKey(name = "type_id"))
+    @JoinColumn(name = "type_id", nullable = false, foreignKey = @ForeignKey(name = "fk_application_type"))
     private ApplicationType applicationType;
 
     public Application() {}
 
+    // Getters and Setters
+
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
@@ -50,7 +59,7 @@ public class Application {
     }
 
     public String getStatus() {
-        return this.status;
+        return status;
     }
 
     public void setStatus(String status) {
@@ -66,7 +75,7 @@ public class Application {
     }
 
     public Staff getStaff() {
-        return this.staff;
+        return staff;
     }
 
     public void setStaff(Staff staff) {
@@ -89,8 +98,8 @@ public class Application {
                 ", endTime=" + endTime +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
-                ", staff=" + staff.getName() +
-                ", applicationType=" + applicationType.getType() +
-                '}';
+                ", staff=" + (staff != null ? staff.getName() : "null") + // Add null check
+                ", applicationType=" + (applicationType != null ? applicationType.getType() : "null") + // Add null check
+                "}";
     }
 }

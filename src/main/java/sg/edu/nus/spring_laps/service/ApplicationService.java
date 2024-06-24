@@ -6,6 +6,8 @@ import sg.edu.nus.spring_laps.model.Application;
 import sg.edu.nus.spring_laps.model.ApplicationType;
 import sg.edu.nus.spring_laps.model.Staff;
 
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 public interface ApplicationService {
@@ -31,7 +33,7 @@ public interface ApplicationService {
 
 	List<Application> getApplicationsForManager(int hierarchy, int departmentId);
 
-	Page<Application> getApplicationsForSubordinates(List<Staff> subordinates,int page,int size);
+	Page<Application> getApplicationsForSubordinates(List<Staff> subordinates, int page, int size);
 
 	void approveApplication(Long applicationId);
 
@@ -49,5 +51,7 @@ public interface ApplicationService {
 
 	void updateApplication(Application application);
 
-//	Page<Application> getApplicationsForSubordinates(List<Staff> subordinates, Pageable pageable);
+	List<Application> findApplicationsByMonth(YearMonth yearMonth);
+
+	List<Application> findByStartTimeBetween(LocalDateTime startDate, LocalDateTime endDate);
 }

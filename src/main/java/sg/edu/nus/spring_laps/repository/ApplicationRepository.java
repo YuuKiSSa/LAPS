@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
+
     List<Application> findByStaff(Staff staff);
 
     @Query("select a from Application a where year(a.startTime) = :year and a.staff = :staff and a.applicationType.type = 'Medical Leave'")
@@ -40,10 +41,10 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     List<Application> findByStaffIn(List<Staff> staff);
 
     @Query("select a from Application a where a.staff.userId= :query")
-    public List<Application> findApplicationByUserId(String query);
+    List<Application> findApplicationByUserId(String query);
 
     @Query("select a from Application a where a.staff.name= :query")
-    public List<Application> findApplicationByName(String query);
-    
-    Page<Application> findByStaffIn(List<Staff> staff,Pageable pageable);
+    List<Application> findApplicationByName(String query);
+
+    Page<Application> findByStaffIn(List<Staff> staff, Pageable pageable);
 }

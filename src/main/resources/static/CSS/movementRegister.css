@@ -1,0 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('/picture/normal.png') no-repeat center center fixed; /* 设置背景图片 */
+    background-size: cover; /* 使背景图片覆盖整个页面 */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    color: #ffffff; /* 设置默认文本颜色为白色，以便在深色背景上显示清楚 */
+}
+
+.header {
+    width: 100%; /* 设置宽度为 100% */
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    position: absolute; /* 绝对定位 */
+    top: 0; /* 置于页面顶部 */
+    left: 0; /* 置于页面左侧 */
+}
+
+.header h1 {
+    font-size: 24px;
+    color: #ffffff;
+}
+
+/* Content styling */
+.content {
+    margin-top: 100px; /* Adjust as needed */
+    text-align: center;
+    background-color: rgba(255, 255, 255);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #0d47a1;
+    width: 80%;
+}
+
+/* Page title styling */
+h1 {
+    text-align: center;
+    color: #0d47a1;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: #0d47a1; /* 设置表格文本颜色为深蓝色 */
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.table-container {
+    margin-top: 20px;
+}
+
+/* Navigation links styling */
+a {
+    text-decoration: none;
+    color: #1565c0;
+    margin: 0 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Previous and Next month links container */
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+}

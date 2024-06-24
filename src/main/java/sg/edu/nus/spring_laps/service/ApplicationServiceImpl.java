@@ -12,6 +12,9 @@ import sg.edu.nus.spring_laps.model.Staff;
 import sg.edu.nus.spring_laps.repository.ApplicationRepository;
 import sg.edu.nus.spring_laps.repository.ApplicationTypeRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -44,35 +47,43 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
         return null;
     }
+
     @Override
     public List<Application> findApplicationsByStaff(Staff staff) {
         return applicationRepository.findByStaff(staff);
     }
+
     @Override
-    public ApplicationType findApplicationTypeById(int ApplicationTypeId) {
-        return applicationTypeRepository.findById(ApplicationTypeId).get();
+    public ApplicationType findApplicationTypeById(int applicationTypeId) {
+        return applicationTypeRepository.findById(applicationTypeId).get();
     }
+
     @Override
     public List<Application> findMedicalLeaveByStaffAndYear(Staff staff, int year){
         return applicationRepository.findMedicalLeaveByStaffAndYear(staff, year);
     }
+
     @Override
     public List<Application> findApplicationsByStaffAndApplicationType(Staff staff, ApplicationType type) {
         return applicationRepository.findByStaffAndApplicationType(staff, type);
     }
+
     @Override
     public List<Application> findAnnualLeaveByStaffAndYear(Staff staff, int year){
         return applicationRepository.findAnnualLeaveByStaffAndYear(staff, year);
     }
+
     @Override
     public Page<Application> findAllByStaff(Staff staff, Pageable pageable) {
         return applicationRepository.findAllByStaff(staff, pageable);
     }
+
     @Override
     public List<Application> getApplicationsForManager(int hierarchy, int departmentId) {
         int subordinateHierarchy = hierarchy - 1;
         return applicationRepository.findByStaff_HierarchyAndStaff_Department_Id(subordinateHierarchy, departmentId);
     }
+
     @Override
     public void approveApplication(Long applicationId) {
         Application application = applicationRepository.findById(applicationId).orElseThrow();
@@ -87,6 +98,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         applicationRepository.save(application);
     }
 
+    @Override
     public Application findApplicationById(String query) {
         try {
             long id = Long.parseLong(query); // 将String转换为long
@@ -100,40 +112,48 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public List<Application> findApplicationByUserId(String query) {
-        // TODO Auto-generated method stub
         return applicationRepository.findApplicationByUserId(query);
     }
 
     @Override
     public List<Application> findApplicationByName(String query) {
-        // TODO Auto-generated method stub
         return applicationRepository.findApplicationByName(query);
     }
 
     @Override
     public List<Application> findAllApplication() {
-        // TODO Auto-generated method stub
         return applicationRepository.findAll();
     }
 
     @Override
     public List<Application> getAllApplications() {
-        // TODO Auto-generated method stub
         return applicationRepository.findAll();
     }
-    
+
     @Override
-    public Page<Application> getApplicationsForSubordinates(List<Staff> subordinates,int page,int size) {
-    	Pageable pageable = PageRequest.of(page, size);
-        return applicationRepository.findByStaffIn(subordinates,pageable);
+    public Page<Application> getApplicationsForSubordinates(List<Staff> subordinates, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return applicationRepository.findByStaffIn(subordinates, pageable);
     }
 
+    @Override
     public void updateApplication(Application application) {
         ApplicationType applicationType = applicationTypeRepository.findById(application.getApplicationType().getId()).orElse(null);
-        System.out.println(applicationType);
         if (applicationType != null) {
             application.setApplicationType(applicationType);
             applicationRepository.save(application);
         }
+    }
+
+    @Override
+    public List<Application> findApplicationsByMonth(YearMonth yearMonth) {
+        LocalDate startDate = yearMonth.atDay(1);
+        LocalDate endDate = yearMonth.atEndOfMonth();
+        return applicationRepository.findByStartTimeBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+    }
+
+    @Override
+    public List<Application> findByStartTimeBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        return applicationRepository.findByStartTimeBetween(startDate, endDate);
     }
 }
