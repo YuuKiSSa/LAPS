@@ -9,4 +9,5 @@ public interface PublicHolidayService {
     List<LocalDate> findAllPublicHolidaysDate();
     List<PublicHoliday> findAllHoliday();
     void saveHoliday(PublicHoliday publicHoliday);
+    void deleteHoliday(PublicHoliday publicHoliday);
 }

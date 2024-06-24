@@ -110,7 +110,18 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "admin/error";
         }
-        applicationService.updateApplication(application);
+        Application savedApplication = applicationService.findApplicationById(application.getId());
+        ApplicationType applicationType = applicationTypeService.findById(application.getApplicationType().getId());
+        savedApplication.setApplicationType(applicationType);
+        applicationService.saveApplication(savedApplication);
+
+        return "redirect:/admin/appSearch";
+    }
+    @PostMapping("/appSearch/edit/delete")
+    public String deleteApp(@RequestParam("id") Long id){
+        Application savedApplication = applicationService.findApplicationById(id);
+        savedApplication.setStatus("Deleted");
+        applicationService.saveApplication(savedApplication);
 
         return "redirect:/admin/appSearch";
     }
@@ -159,6 +170,15 @@ public class AdminController {
             return "admin/error";
         }
         publicHolidayService.saveHoliday(publicHoliday);
+        return "redirect:/admin/PublicHoliday";
+    }
+    @PostMapping("/PublicHoliday/delete")
+    public String deleteHoliday(@ModelAttribute PublicHoliday publicHoliday,
+                              BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "admin/error";
+        }
+        publicHolidayService.deleteHoliday(publicHoliday);
         return "redirect:/admin/PublicHoliday";
     }
 

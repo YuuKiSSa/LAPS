@@ -36,4 +36,11 @@ public class PublicHolidayServiceImpl implements PublicHolidayService {
         // TODO Auto-generated method stub
         publicHolidayRepository.save(publicHoliday);
     }
+
+	@Override
+	public void deleteHoliday(PublicHoliday publicHoliday) {
+		// TODO Auto-generated method stub
+		publicHolidayRepository.delete(publicHoliday);
+		publicHolidayRepository.flush();
+	}
 }
