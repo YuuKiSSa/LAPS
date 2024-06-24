@@ -5,48 +5,61 @@
     <title>Search Admin</title>
     <link rel="stylesheet" href="/CSS/admin/adminResearch1.css">
     <script src="/JavaScript/search-result-script.js"></script>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <div class="header">
     <h1>Search Admin</h1>
 </div>
 <div class="content">
-    <form action="#" th:action="@{/admin/Asearch}" method="post">
+    <form th:action="@{/admin/Asearch}" method="post">
         <p>Please input Admin_id:</p>
         <label for="id">Search:</label>
         <input type="text" id="id" name="id" th:value="${id}"><br>
-        <input type="submit" value="Search">
+        <input type="submit" value="search">
     </form>
 
     <!-- 检查是否有搜索结果 -->
-    <div th:if="${admin != null}" class="table-container">
+    <div th:if="${admin == null or #lists.isEmpty(admin)}">
+        <p class="error">No related admin</p>
+    </div>
+
+    <div th:if="${admin != null and not #lists.isEmpty(admin)}">
         <table>
-            <tr>
-                <th>ID</th>
-                <th>Password</th>
-                <th>Actions</th>
-            </tr>
-            <!-- 使用Thymeleaf语法遍历展示员工信息 -->
-            <tr th:each="admin : ${admin}">
-                <form th:action="@{/admin/Asearch/edit}" method="post">
-                    <td>
-                        <input type="text" name="userId" id="userId" th:value="${admin.userId}" readonly>
-                    </td>
-                    <td>
-                        <input type="text" name="password" th:value="${admin.password}" readonly>
-                    </td>
-                    <td>
-                        <button type="button" onclick="enableEdit(this)">Edit</button>
-                        <button type="submit">Save</button>
-                    </td>
-                </form>
-                <td>
-                    <form th:action="@{/admin/Asearch/edit/delete}" method="post">
-                        <input type="hidden" name="userId" th:value="${admin.userId}">
-                        <button type="submit">Delete</button>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Password</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 使用Thymeleaf语法遍历展示管理员信息 -->
+                <tr th:each="adm : ${admin}">
+                    <form th:action="@{/admin/Asearch/edit}" method="post">
+                        <td>
+                            <input type="text" name="userId" th:value="${adm.userId}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" name="password" th:value="${adm.password}" readonly>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 10px;">
+                                <button type="button" onclick="enableEdit(this)">Edit</button>
+                                <button type="submit">Save</button>
+                                <form th:action="@{/admin/Asearch/edit/delete}" method="post">
+                                    <input type="hidden" name="userId" th:value="${adm.userId}">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </td>
                     </form>
-                </td>
-            </tr>
+                </tr>
+            </tbody>
         </table>
     </div>
     <div class="button-container">

@@ -97,7 +97,7 @@ body {
 
         th, td {
             padding: 10px;
-            text-align: left;
+            text-align: center;
             border-bottom: 1px solid #ddd;
             color: #0d47a1; /* 设置表格文本颜色为深蓝色 */
         }

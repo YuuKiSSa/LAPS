@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sg.edu.nus.spring_laps.model.Admin;
 import sg.edu.nus.spring_laps.model.Staff;
+import sg.edu.nus.spring_laps.dto.StaffDTO;
 import sg.edu.nus.spring_laps.repository.AdminRepository;
 import sg.edu.nus.spring_laps.repository.StaffRepository;
 
@@ -102,4 +103,9 @@ public class AdminServiceImpl implements AdminService {
         administratorRepository.deleteById(userId);
         administratorRepository.flush();
     }
+	@Override
+	public List<StaffDTO> findAllStaffWithout() {
+		// TODO Auto-generated method stub
+		return adminRepository.findAllStaffWithout();
+	}
 }

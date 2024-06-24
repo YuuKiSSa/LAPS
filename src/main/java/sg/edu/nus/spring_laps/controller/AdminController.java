@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import sg.edu.nus.spring_laps.dto.StaffDTO;
 import sg.edu.nus.spring_laps.model.*;
 import sg.edu.nus.spring_laps.service.*;
 
@@ -29,6 +31,13 @@ public class AdminController {
     @Autowired
     private PublicHolidayService publicHolidayService;
 
+    @GetMapping("/api/staff")
+    @ResponseBody
+    public List<StaffDTO> getAllStaff() {
+    	List<StaffDTO> staffList=adminService.findAllStaffWithout();
+    	System.out.println(staffList);
+        return staffList;
+    }
     @GetMapping("/Asearch")
     public String searchAdmin(Model model) {
         return "admin/adminResearch";

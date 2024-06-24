@@ -9,8 +9,18 @@ public class StaffDTO {
     private int entitle;
     private String departmentName;
 
-    // Getters and setters
-
+    public StaffDTO() {
+    }
+    
+    public StaffDTO(String userId, String name, String email, boolean status, int hierarchy, int entitle, String departmentName) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.status = status;
+        this.hierarchy = hierarchy;
+        this.entitle = entitle;
+        this.departmentName = departmentName;
+    }
     public String getUserId() {
         return userId;
     }
