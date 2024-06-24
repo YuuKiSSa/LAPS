@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background: url('/picture/normal.png') no-repeat center center fixed; /* 设置背景图片 */
+    background: url('/Picture/normal.png') no-repeat center center fixed; /* 设置背景图片 */
     background-size: cover; /* 使背景图片覆盖整个页面 */
     margin: 0;
     display: flex;
