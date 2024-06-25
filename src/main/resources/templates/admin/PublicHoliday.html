@@ -8,7 +8,7 @@
 	       function enableEdit(button) {
 	           var inputFields = button.parentNode.parentNode.querySelectorAll('input');
 	           inputFields.forEach(function(input) {
-				if (input.name !== 'holidayName') {
+				if (input.name === 'holidayName') {
 	               input.removeAttribute('readonly');
 				}
 	           });

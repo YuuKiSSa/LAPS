@@ -155,7 +155,15 @@ public class AdminController {
         model.addAttribute("holiday", p);
         return "admin/PublicHoliday";
     }
-
+    @PostMapping("/PublicHoliday")
+    public String saveaHoliday(@ModelAttribute PublicHoliday publicHoliday,
+                              BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "admin/error";
+        }
+        publicHolidayService.saveHoliday(publicHoliday);
+        return "redirect:/admin/PublicHoliday";
+    }
     @GetMapping("/PublicHoliday/create")
     public String createHoliday(ModelMap model) {
         model.addAttribute("holiday", new PublicHoliday());
