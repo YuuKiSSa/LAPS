@@ -127,7 +127,7 @@ public class ManagerController {
 
 	@GetMapping("/report/compensation")
 	public ResponseEntity<byte[]> getCompensationReport(@RequestParam(required = false) String userId) {
-		List<Application> applications = (userId != null) ? reportService.getCompensationClaimsByStaffUserId(userId)
+		List<Application> applications = (!userId.isEmpty()) ? reportService.getCompensationClaimsByStaffUserId(userId)
 				: reportService.getAllCompensationClaims();
 		String csvContent = generateCSV(applications);
 
